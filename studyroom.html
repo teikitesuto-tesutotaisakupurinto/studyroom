@@ -1,0 +1,955 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f5f7fb">
+<title>StudyRoom - オンライン自習室</title>
+
+<style>
+:root {
+  --primary:#416fe8;
+  --primary-light:#edf2ff;
+  --bg:#f5f7fb;
+  --surface:#ffffff;
+  --text:#25324a;
+  --muted:#7c879b;
+  --border:#e5eaf2;
+  --green:#22976b;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  font-family:Arial,"Noto Sans JP",sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+button,input { font:inherit; }
+button { cursor:pointer; }
+button:disabled { opacity:.55;cursor:not-allowed; }
+header {
+  height:66px;
+  padding:0 22px;
+  background:white;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+}
+.brand { font-size:23px;font-weight:800;letter-spacing:-.8px; }
+.brand span { color:var(--primary); }
+.header-right { display:flex;align-items:center;gap:12px; }
+.connection { font-size:12px;color:var(--muted); }
+.connection::before {
+  content:"";
+  display:inline-block;
+  width:7px;height:7px;border-radius:50%;
+  background:currentColor;margin-right:7px;
+}
+main { max-width:1500px;margin:auto;padding:22px; }
+.page-heading {
+  display:flex;align-items:center;justify-content:space-between;
+  gap:15px;margin-bottom:18px;
+}
+h1 { font-size:23px;margin:0 0 6px; }
+.subtitle { color:var(--muted);font-size:13px;line-height:1.7; }
+.layout {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 290px;
+  gap:16px;
+  align-items:start;
+}
+.card {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:15px;
+  overflow:hidden;
+}
+.map-header {
+  display:flex;justify-content:space-between;align-items:center;
+  gap:10px;padding:15px 17px;border-bottom:1px solid var(--border);
+}
+.map-header strong { font-size:14px; }
+.small-muted { font-size:12px;color:var(--muted); }
+#map {
+  display:block;
+  width:100%;
+  height:auto;
+  background:#fbfcfe;
+  outline:none;
+  touch-action:pan-y;
+}
+.map-footer {
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:10px;
+  padding:12px 16px;border-top:1px solid var(--border);
+  color:var(--muted);font-size:12px;
+}
+.sidebar { display:flex;flex-direction:column;gap:14px; }
+.panel { padding:16px; }
+.panel h2 { margin:0 0 15px;font-size:14px; }
+.profile { display:flex;align-items:center;gap:11px; }
+.avatar-mini {
+  width:42px;height:42px;border-radius:50%;
+  display:grid;place-items:center;
+  color:white;font-weight:700;flex-shrink:0;
+}
+.profile-name { font-size:14px;font-weight:700;overflow-wrap:anywhere; }
+.profile-zone { font-size:12px;color:var(--muted);margin-top:5px; }
+.stat {
+  display:flex;justify-content:space-between;gap:10px;
+  padding-top:14px;margin-top:16px;
+  border-top:1px solid var(--border);font-size:12px;
+}
+.stat strong { color:var(--primary); }
+.people { display:flex;flex-direction:column;gap:13px; }
+.person { display:flex;align-items:center;gap:9px;min-width:0; }
+.person .avatar-mini { width:34px;height:34px;font-size:12px; }
+.person-info { min-width:0;flex:1; }
+.person-name {
+  font-size:12px;font-weight:700;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.person-zone { font-size:11px;color:var(--muted);margin-top:4px; }
+.online-dot {
+  width:7px;height:7px;border-radius:50%;
+  background:#28a56f;flex-shrink:0;
+}
+.button {
+  border:0;border-radius:9px;padding:10px 13px;
+  font-size:13px;font-weight:700;
+}
+.button-primary { background:var(--primary);color:white; }
+.button-primary:hover { background:#315bd0; }
+.button-secondary { background:#eef1f7;color:#35445d; }
+.button-secondary:hover { background:#e4e9f2; }
+.full { width:100%; }
+.login-wrap {
+  width:calc(100% - 32px);max-width:440px;
+  margin:9vh auto;padding:30px;
+  background:white;border:1px solid var(--border);
+  border-radius:17px;
+}
+.login-wrap h1 { font-size:26px; }
+.login-description {
+  color:var(--muted);font-size:13px;line-height:1.9;
+  margin:10px 0 23px;
+}
+label { display:block;font-size:12px;color:var(--muted);margin-bottom:7px; }
+.input {
+  width:100%;padding:12px;border:1px solid #dbe2ee;
+  border-radius:9px;background:white;color:var(--text);
+}
+.input:focus { outline:2px solid #bdceff;border-color:var(--primary); }
+.login-wrap .button { margin-top:12px; }
+.notice { font-size:12px;line-height:1.8;color:var(--muted); }
+.error {
+  color:#bd3737;font-size:12px;line-height:1.8;
+  white-space:pre-wrap;margin-top:12px;
+}
+.hidden { display:none!important; }
+.zone-list { display:flex;flex-direction:column;gap:12px; }
+.zone-row { display:flex;align-items:center;gap:9px;font-size:12px; }
+.zone-swatch { width:11px;height:11px;border-radius:3px;flex-shrink:0; }
+.tip {
+  background:#f5f8ff;border-radius:9px;padding:11px;
+  color:#5d6b84;font-size:12px;line-height:1.8;
+}
+.empty { color:var(--muted);font-size:12px;line-height:1.8; }
+@media(max-width:900px) {
+  main { padding:15px; }
+  .layout { grid-template-columns:1fr; }
+  .sidebar { display:grid;grid-template-columns:1fr 1fr; }
+  .panel:last-child { grid-column:1/-1; }
+}
+@media(max-width:550px) {
+  header { height:58px;padding:0 13px; }
+  .brand { font-size:20px; }
+  .connection { font-size:11px; }
+  main { padding:12px; }
+  .page-heading { align-items:flex-start;flex-direction:column; }
+  h1 { font-size:21px; }
+  .sidebar { display:flex; }
+  .map-header { padding:12px; }
+  .map-footer { padding:10px 12px; }
+  .login-wrap { margin:6vh auto;padding:23px; }
+}
+</style>
+</head>
+
+<body>
+<header>
+  <div class="brand">Study<span>Room</span></div>
+  <div class="header-right">
+    <span class="connection" id="connection">未接続</span>
+    <button id="leaveButton" class="button button-secondary hidden">退出</button>
+  </div>
+</header>
+
+<section id="loginScreen" class="login-wrap">
+  <div class="brand">Study<span>Room</span></div>
+  <h1 style="margin-top:24px">自習室に入室する</h1>
+  <p class="login-description">
+    オンラインの自習空間へようこそ。<br>
+    アバターを動かして、自分の好きな場所で勉強しよう。
+  </p>
+  <label for="displayName">表示名</label>
+  <input id="displayName" class="input" maxlength="20"
+         autocomplete="nickname" placeholder="表示名を入力">
+  <button id="enterButton" class="button button-primary full">入室する</button>
+  <p class="notice">
+    入室すると、表示名とアバターの位置が同じルームの利用者に公開されます。
+  </p>
+  <div id="loginError" class="error"></div>
+</section>
+
+<main id="appScreen" class="hidden">
+  <div class="page-heading">
+    <div>
+      <h1>メイン自習室</h1>
+      <div class="subtitle">集中できる場所を見つけて、自分のペースで学習しよう。</div>
+    </div>
+    <span class="small-muted">ルームID：main</span>
+  </div>
+
+  <div class="layout">
+    <section class="card">
+      <div class="map-header">
+        <strong>自習室フロアマップ</strong>
+        <span id="mapCount" class="small-muted">在室 0 人</span>
+      </div>
+      <canvas id="map" width="1000" height="650" tabindex="0"
+              aria-label="自習室マップ"></canvas>
+      <div class="map-footer">
+        <span>移動：矢印キー / W・A・S・D</span>
+        <span>家具にぶつかると通り抜けません</span>
+      </div>
+    </section>
+
+    <aside class="sidebar">
+      <section class="card panel">
+        <h2>あなたの状態</h2>
+        <div class="profile">
+          <div id="myAvatar" class="avatar-mini">S</div>
+          <div>
+            <div id="myName" class="profile-name">利用者</div>
+            <div id="myZone" class="profile-zone">静音自習エリア</div>
+          </div>
+        </div>
+        <div class="stat">
+          <span>同じルームの利用者</span>
+          <strong id="peopleCount">0人</strong>
+        </div>
+      </section>
+
+      <section class="card panel">
+        <h2>在室中の利用者</h2>
+        <div id="peopleList" class="people">
+          <div class="empty">まだ利用者はいません。</div>
+        </div>
+      </section>
+
+      <section class="card panel">
+        <h2>自習エリア</h2>
+        <div class="zone-list">
+          <div class="zone-row">
+            <span class="zone-swatch" style="background:#dce8ff"></span>
+            静音自習エリア
+          </div>
+          <div class="zone-row">
+            <span class="zone-swatch" style="background:#d9f0e3"></span>
+            グループ学習
+          </div>
+          <div class="zone-row">
+            <span class="zone-swatch" style="background:#ffedcf"></span>
+            休憩エリア
+          </div>
+        </div>
+        <p class="notice">エリアの名前と色は、現在位置に応じて表示されます。</p>
+      </section>
+
+      <section class="card panel">
+        <h2>操作方法</h2>
+        <div class="tip">
+          矢印キーまたはW・A・S・Dで移動します。<br>
+          別の端末から同じルームに入ると、アバターがリアルタイムで表示されます。
+        </div>
+      </section>
+    </aside>
+  </div>
+</main>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
+
+<script>
+"use strict";
+
+/* =====================================================
+   Firebase設定
+   databaseURLだけはConsoleに表示された実際のURLを入力
+   ===================================================== */
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAXliKkcuGSFUvYmfxMfiY6SgYWdos2RKg",
+  authDomain: "reservelink-efb43.firebaseapp.com",
+  projectId: "reservelink-efb43",
+  storageBucket: "reservelink-efb43.firebasestorage.app",
+  messagingSenderId: "134662112302",
+  appId: "1:134662112302:web:9cf6ceb06c2eadb44e0bbf",
+  databaseURL: "ここにRealtime DatabaseのURL"
+};
+
+/* =====================================================
+   初期設定
+   ===================================================== */
+
+const ROOM_ID = "main";
+const SPEED = 3.2;
+const RADIUS = 14;
+const SEND_INTERVAL = 100;
+
+const $ = id => document.getElementById(id);
+const canvas = $("map");
+const ctx = canvas.getContext("2d");
+
+let auth = null;
+let db = null;
+let uid = null;
+let playerRef = null;
+let playersRef = null;
+let connectedRef = null;
+let connectionCallback = null;
+
+let active = false;
+let joining = false;
+let name = "";
+let color = "#416fe8";
+let x = 270;
+let y = 270;
+let lastSent = 0;
+let lastZone = "";
+let players = {};
+let keys = {};
+let animationFrame = 0;
+let movementTimer = null;
+let pointerTarget = null;
+
+const COLORS = [
+  "#416fe8","#d65b73","#199b83",
+  "#9264d9","#d58b31","#318fa7"
+];
+
+const ZONES = [
+  {
+    id:"quiet",
+    name:"静音自習エリア",
+    x:35,y:65,w:555,h:550,
+    fill:"#edf3ff",stroke:"#c9d9fb"
+  },
+  {
+    id:"group",
+    name:"グループ学習",
+    x:610,y:65,w:355,h:290,
+    fill:"#eaf7ef",stroke:"#c4e6d2"
+  },
+  {
+    id:"break",
+    name:"休憩エリア",
+    x:610,y:375,w:355,h:240,
+    fill:"#fff5e4",stroke:"#f0dfbd"
+  }
+];
+
+const DESKS = [
+  {x:90,y:145,w:105,h:40},
+  {x:225,y:145,w:105,h:40},
+  {x:360,y:145,w:105,h:40},
+  {x:90,y:340,w:105,h:40},
+  {x:225,y:340,w:105,h:40},
+  {x:360,y:340,w:105,h:40},
+  {x:665,y:150,w:105,h:40},
+  {x:805,y:150,w:105,h:40},
+  {x:690,y:445,w:90,h:40},
+  {x:810,y:445,w:90,h:40}
+];
+
+/* =====================================================
+   表示・基本処理
+   ===================================================== */
+
+function setConnection(text, colorValue) {
+  $("connection").textContent = text;
+  $("connection").style.color = colorValue || "#778196";
+}
+
+function showError(text) {
+  $("loginError").textContent = text;
+}
+
+function zoneAt(px, py) {
+  return ZONES.find(z =>
+    px >= z.x && px <= z.x + z.w &&
+    py >= z.y && py <= z.y + z.h
+  ) || ZONES[0];
+}
+
+function zoneName(id) {
+  return (ZONES.find(z => z.id === id) || ZONES[0]).name;
+}
+
+function intersects(a,b) {
+  return a.x < b.x + b.w &&
+    a.x + a.w > b.x &&
+    a.y < b.y + b.h &&
+    a.y + a.h > b.y;
+}
+
+function canMove(px,py) {
+  if (px < 27 || px > 973 || py < 43 || py > 623) {
+    return false;
+  }
+
+  const box = {
+    x:px-RADIUS,
+    y:py-RADIUS,
+    w:RADIUS*2,
+    h:RADIUS*2
+  };
+
+  return !DESKS.some(d => intersects(box,d));
+}
+
+function setMyProfile() {
+  $("myName").textContent = name;
+  $("myAvatar").textContent = name.slice(0,1);
+  $("myAvatar").style.background = color;
+  $("myZone").textContent = zoneName(zoneAt(x,y).id);
+}
+
+function makeElement(tag,className,text) {
+  const el = document.createElement(tag);
+  if (className) el.className = className;
+  if (text !== undefined) el.textContent = text;
+  return el;
+}
+
+/* =====================================================
+   マップ描画
+   ===================================================== */
+
+function drawDesk(d) {
+  ctx.fillStyle = "#d5deeb";
+  ctx.strokeStyle = "#b7c4d6";
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.roundRect(d.x,d.y,d.w,d.h,7);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.fillStyle = "#ffffff";
+  ctx.beginPath();
+  ctx.roundRect(d.x+7,d.y+6,d.w-14,d.h-12,4);
+  ctx.fill();
+
+  ctx.fillStyle = "#aab8cb";
+  ctx.beginPath();
+  ctx.roundRect(d.x+d.w/2-13,d.y+d.h-3,26,7,3);
+  ctx.fill();
+}
+
+function drawPlant(px,py) {
+  ctx.fillStyle = "#d5eadc";
+  ctx.beginPath();
+  ctx.arc(px,py,15,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.fillStyle = "#579c78";
+  ctx.beginPath();
+  ctx.arc(px-5,py-2,5,0,Math.PI*2);
+  ctx.arc(px+5,py-4,5,0,Math.PI*2);
+  ctx.arc(px,py+5,5,0,Math.PI*2);
+  ctx.fill();
+}
+
+function drawAvatar(id,p) {
+  if (!p || !Number.isFinite(p.x) || !Number.isFinite(p.y)) return;
+
+  const isMe = id === uid;
+  const px = p.x;
+  const py = p.y;
+
+  ctx.save();
+
+  if (isMe) {
+    ctx.beginPath();
+    ctx.arc(px,py,26,0,Math.PI*2);
+    ctx.fillStyle = "rgba(65,111,232,.12)";
+    ctx.fill();
+    ctx.strokeStyle = "rgba(65,111,232,.4)";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  }
+
+  ctx.fillStyle = "rgba(35,48,71,.12)";
+  ctx.beginPath();
+  ctx.ellipse(px,py+5,15,7,0,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.fillStyle = typeof p.color === "string" ? p.color : "#416fe8";
+  ctx.beginPath();
+  ctx.arc(px,py,13,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "bold 11px Arial,sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(String(p.name || "?").slice(0,1),px,py);
+
+  const label = String(p.name || "利用者").slice(0,20);
+  ctx.font = "12px Arial,sans-serif";
+  const labelWidth = Math.min(ctx.measureText(label).width+16,150);
+
+  ctx.fillStyle = "rgba(255,255,255,.97)";
+  ctx.beginPath();
+  ctx.roundRect(px-labelWidth/2,py+19,labelWidth,23,6);
+  ctx.fill();
+
+  ctx.strokeStyle = "#e2e7ef";
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  ctx.fillStyle = "#27364d";
+  ctx.fillText(label,px,py+30);
+
+  ctx.restore();
+}
+
+function drawMap() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle = "#fbfcfe";
+  ctx.fillRect(0,0,1000,650);
+
+  ctx.strokeStyle = "#f0f2f6";
+  ctx.lineWidth = 1;
+
+  for (let gx=0;gx<=1000;gx+=25) {
+    ctx.beginPath();
+    ctx.moveTo(gx,0);
+    ctx.lineTo(gx,650);
+    ctx.stroke();
+  }
+
+  for (let gy=0;gy<=650;gy+=25) {
+    ctx.beginPath();
+    ctx.moveTo(0,gy);
+    ctx.lineTo(1000,gy);
+    ctx.stroke();
+  }
+
+  ZONES.forEach(z => {
+    ctx.fillStyle = z.fill;
+    ctx.strokeStyle = z.stroke;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.roundRect(z.x,z.y,z.w,z.h,15);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle = "#58677e";
+    ctx.font = "600 16px Arial,sans-serif";
+    ctx.textAlign = "start";
+    ctx.textBaseline = "alphabetic";
+    ctx.fillText(z.name,z.x+18,z.y+28);
+  });
+
+  ctx.fillStyle = "#fbfcfe";
+  ctx.fillRect(460,54,90,22);
+  ctx.fillStyle = "#64748b";
+  ctx.font = "12px Arial,sans-serif";
+  ctx.fillText("ENTRANCE",466,51);
+
+  DESKS.forEach(drawDesk);
+
+  drawPlant(555,110);
+  drawPlant(930,320);
+  drawPlant(635,570);
+  drawPlant(560,565);
+
+  Object.entries(players)
+    .sort(([a],[b]) => a === uid ? 1 : b === uid ? -1 : 0)
+    .forEach(([id,p]) => drawAvatar(id,p));
+}
+
+function renderPeople() {
+  const entries = Object.entries(players)
+    .filter(([,p]) => p && typeof p.name === "string");
+
+  $("mapCount").textContent = "在室 " + entries.length + " 人";
+  $("peopleCount").textContent = entries.length + "人";
+
+  const list = $("peopleList");
+  list.replaceChildren();
+
+  if (!entries.length) {
+    list.appendChild(makeElement("div","empty","現在、在室中の利用者はいません。"));
+    return;
+  }
+
+  entries.forEach(([id,p]) => {
+    const row = makeElement("div","person");
+    const avatar = makeElement("div","avatar-mini",p.name.slice(0,1));
+    avatar.style.background = p.color || "#416fe8";
+
+    const info = makeElement("div","person-info");
+    const shownName = p.name + (id === uid ? "（あなた）" : "");
+    const personName = makeElement("div","person-name",shownName);
+    const personZone = makeElement("div","person-zone",zoneName(p.zone));
+
+    const dot = makeElement("div","online-dot");
+
+    info.append(personName,personZone);
+    row.append(avatar,info,dot);
+    list.appendChild(row);
+  });
+}
+
+/* =====================================================
+   リアルタイム同期
+   ===================================================== */
+
+function publishPosition(force) {
+  if (!active || !playerRef) return;
+
+  const now = Date.now();
+  if (!force && now-lastSent < SEND_INTERVAL) return;
+  lastSent = now;
+
+  const zone = zoneAt(x,y).id;
+
+  playerRef.update({
+    x:Math.round(x),
+    y:Math.round(y),
+    zone:zone,
+    updatedAt:firebase.database.ServerValue.TIMESTAMP
+  }).catch(err => {
+    console.error(err);
+    setConnection("同期エラー","#bd3737");
+  });
+
+  if (zone !== lastZone) {
+    lastZone = zone;
+    $("myZone").textContent = zoneName(zone);
+  }
+}
+
+function onPlayersChanged(snapshot) {
+  if (!active) return;
+
+  players = snapshot.val() || {};
+  renderPeople();
+  drawMap();
+  setMyProfile();
+}
+
+/* =====================================================
+   アバター移動
+   ===================================================== */
+
+function movePlayer() {
+  if (!active) return;
+
+  let dx = 0;
+  let dy = 0;
+
+  if (keys.ArrowLeft || keys.a || keys.A) dx--;
+  if (keys.ArrowRight || keys.d || keys.D) dx++;
+  if (keys.ArrowUp || keys.w || keys.W) dy--;
+  if (keys.ArrowDown || keys.s || keys.S) dy++;
+
+  if (pointerTarget) {
+    const diffX = pointerTarget.x-x;
+    const diffY = pointerTarget.y-y;
+    const distance = Math.hypot(diffX,diffY);
+
+    if (distance < SPEED*1.5) {
+      pointerTarget = null;
+    } else {
+      dx = diffX/distance;
+      dy = diffY/distance;
+    }
+  }
+
+  if (!dx && !dy) return;
+
+  const length = Math.hypot(dx,dy) || 1;
+  dx = dx/length*SPEED;
+  dy = dy/length*SPEED;
+
+  let moved = false;
+
+  if (canMove(x+dx,y)) {
+    x += dx;
+    moved = true;
+  }
+
+  if (canMove(x,y+dy)) {
+    y += dy;
+    moved = true;
+  }
+
+  if (moved) publishPosition(false);
+}
+
+function startMovement() {
+  stopMovement();
+  movementTimer = setInterval(movePlayer,30);
+}
+
+function stopMovement() {
+  if (movementTimer) clearInterval(movementTimer);
+  movementTimer = null;
+  keys = {};
+  pointerTarget = null;
+}
+
+/* =====================================================
+   入室・退出
+   ===================================================== */
+
+async function enterRoom() {
+  if (joining || active) return;
+
+  name = $("displayName").value.trim().slice(0,20);
+
+  if (!name) {
+    showError("表示名を入力してください。");
+    return;
+  }
+
+  if (firebaseConfig.databaseURL.includes("ここに")) {
+    showError("Firebase設定の databaseURL に、Realtime Databaseの実際のURLを入力してください。");
+    return;
+  }
+
+  joining = true;
+  $("enterButton").disabled = true;
+  $("enterButton").textContent = "接続中...";
+  showError("");
+  setConnection("接続中","#b98528");
+
+  try {
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+
+    auth = firebase.auth();
+    db = firebase.database();
+
+    const credential = await auth.signInAnonymously();
+    uid = credential.user.uid;
+
+    playerRef = db.ref("rooms/" + ROOM_ID + "/players/" + uid);
+    playersRef = db.ref("rooms/" + ROOM_ID + "/players");
+    connectedRef = db.ref(".info/connected");
+
+    color = COLORS[Math.floor(Math.random()*COLORS.length)];
+    x = 270;
+    y = 270;
+    lastZone = zoneAt(x,y).id;
+
+    // 切断時にサーバー側で在室データを削除
+    await playerRef.onDisconnect().remove();
+
+    // 初回入室時に自分の情報を登録
+    await playerRef.set({
+      name:name,
+      x:x,
+      y:y,
+      zone:lastZone,
+      color:color,
+      joinedAt:firebase.database.ServerValue.TIMESTAMP,
+      updatedAt:firebase.database.ServerValue.TIMESTAMP
+    });
+
+    active = true;
+    joining = false;
+
+    $("loginScreen").classList.add("hidden");
+    $("appScreen").classList.remove("hidden");
+    $("leaveButton").classList.remove("hidden");
+
+    // 全利用者の状態を購読
+    playersRef.on("value",onPlayersChanged,err => {
+      console.error(err);
+      setConnection("読み取りエラー","#bd3737");
+    });
+
+    // 接続状態を表示
+    connectionCallback = snapshot => {
+      if (!active) return;
+      if (snapshot.val() === true) {
+        setConnection("接続中","#22976b");
+      } else {
+        setConnection("再接続中","#b98528");
+      }
+    };
+
+    connectedRef.on("value",connectionCallback);
+
+    setMyProfile();
+    renderPeople();
+    drawMap();
+    startMovement();
+    canvas.focus();
+
+  } catch (err) {
+    console.error("StudyRoom入室エラー:",err);
+
+    active = false;
+    joining = false;
+
+    if (playersRef) playersRef.off();
+    if (connectedRef && connectionCallback) {
+      connectedRef.off("value",connectionCallback);
+    }
+
+    if (playerRef) {
+      try { await playerRef.remove(); } catch (_) {}
+    }
+
+    if (auth) {
+      try { await auth.signOut(); } catch (_) {}
+    }
+
+    uid = null;
+    playerRef = null;
+    playersRef = null;
+    connectedRef = null;
+    connectionCallback = null;
+
+    const code = err.code || "";
+    let message = "入室に失敗しました。";
+
+    if (code.includes("permission-denied")) {
+      message += "\nRealtime Databaseのセキュリティルールを確認してください。";
+    } else if (code.includes("api-key-not-valid")) {
+      message += "\nFirebaseのAPIキーが正しいか確認してください。";
+    } else if (code.includes("operation-not-allowed")) {
+      message += "\nFirebase Authenticationで匿名認証を有効にしてください。";
+    } else if (code.includes("network")) {
+      message += "\nネットワーク接続を確認してください。";
+    } else {
+      message += "\nFirebaseの設定、データベースURL、認証設定を確認してください。";
+    }
+
+    showError(message + "\n詳細：" + (err.message || code));
+    setConnection("接続失敗","#bd3737");
+
+  } finally {
+    $("enterButton").disabled = false;
+    $("enterButton").textContent = "入室する";
+  }
+}
+
+async function leaveRoom() {
+  if (joining) return;
+
+  active = false;
+  stopMovement();
+  cancelAnimationFrame(animationFrame);
+
+  if (playersRef) playersRef.off();
+
+  if (connectedRef && connectionCallback) {
+    connectedRef.off("value",connectionCallback);
+  }
+
+  try {
+    if (playerRef) await playerRef.remove();
+  } catch (err) {
+    console.error("在室情報の削除に失敗:",err);
+  }
+
+  try {
+    if (auth) await auth.signOut();
+  } catch (err) {
+    console.error("サインアウトに失敗:",err);
+  }
+
+  uid = null;
+  playerRef = null;
+  playersRef = null;
+  connectedRef = null;
+  connectionCallback = null;
+  players = {};
+
+  $("appScreen").classList.add("hidden");
+  $("loginScreen").classList.remove("hidden");
+  $("leaveButton").classList.add("hidden");
+  setConnection("未接続","#778196");
+  drawMap();
+}
+
+/* =====================================================
+   イベント
+   ===================================================== */
+
+$("enterButton").addEventListener("click",enterRoom);
+$("leaveButton").addEventListener("click",leaveRoom);
+
+$("displayName").addEventListener("keydown",event => {
+  if (event.key === "Enter") enterRoom();
+});
+
+document.addEventListener("keydown",event => {
+  if (!active) return;
+
+  const tag = event.target && event.target.tagName;
+  if (tag === "INPUT" || tag === "TEXTAREA") return;
+
+  const movementKeys = [
+    "ArrowLeft","ArrowRight","ArrowUp","ArrowDown",
+    "w","a","s","d","W","A","S","D"
+  ];
+
+  if (movementKeys.includes(event.key)) {
+    event.preventDefault();
+    keys[event.key] = true;
+    pointerTarget = null;
+  }
+});
+
+document.addEventListener("keyup",event => {
+  keys[event.key] = false;
+});
+
+window.addEventListener("blur",() => {
+  keys = {};
+});
+
+canvas.addEventListener("pointerdown",event => {
+  if (!active) return;
+
+  const rect = canvas.getBoundingClientRect();
+  const px = (event.clientX-rect.left)/rect.width*canvas.width;
+  const py = (event.clientY-rect.top)/rect.height*canvas.height;
+
+  if (canMove(px,py)) {
+    pointerTarget = {x:px,y:py};
+  }
+});
+
+window.addEventListener("beforeunload",() => {
+  // onDisconnectはFirebaseサーバーに事前登録済み
+  // ブラウザ終了時にも接続切断後の削除が実行される
+});
+
+drawMap();
+</script>
+</body>
+</html>
