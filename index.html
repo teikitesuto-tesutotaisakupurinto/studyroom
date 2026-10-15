@@ -1,4 +1,4 @@
-```html
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -6,86 +6,168 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>StudyRoom</title>
 
-<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
-
 <style>
+:root {
+  --blue: #2563eb;
+  --border: #dbe3ef;
+  --bg: #f3f6fb;
+  --text: #172033;
+}
 * { box-sizing: border-box; }
 body {
   margin: 0;
   font-family: Arial, "Noto Sans JP", sans-serif;
-  background: #f3f6fb;
-  color: #243247;
+  color: var(--text);
+  background: var(--bg);
 }
-header {
-  height: 62px;
-  background: #fff;
-  border-bottom: 1px solid #dce3ed;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 20px;
-}
-header h1 { font-size: 20px; margin: 0; }
-main { max-width: 1100px; margin: 24px auto; padding: 0 16px; }
-.panel {
-  background: white;
-  border: 1px solid #dce3ed;
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 16px;
-}
-input, button {
-  font: inherit;
-  border-radius: 8px;
-  padding: 11px 14px;
-}
-input { border: 1px solid #bdc8d8; width: 100%; }
+button, input { font: inherit; }
 button {
-  cursor: pointer;
   border: 0;
-  background: #2563eb;
-  color: white;
-  font-weight: 600;
+  border-radius: 9px;
+  padding: 10px 14px;
+  cursor: pointer;
 }
 button:disabled { opacity: .55; cursor: wait; }
-button.secondary { background: #64748b; }
-#loginScreen { max-width: 440px; margin: 70px auto; }
-#loginScreen button { width: 100%; margin-top: 12px; }
-#app { display: none; }
-#status {
-  padding: 12px 14px;
-  border-radius: 8px;
-  background: #e8f1ff;
-  color: #1d4f91;
-  margin-bottom: 16px;
-  overflow-wrap: anywhere;
+.primary { background: var(--blue); color: white; }
+.secondary { background: #e8eef8; color: #172033; }
+.danger { background: #dc2626; color: white; }
+header {
+  background: white;
+  border-bottom: 1px solid var(--border);
+  padding: 14px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
 }
-#status.error { background: #fff0f0; color: #a32121; }
-#status.ok { background: #e8f8ef; color: #17663b; }
-.room-layout {
+header h1 { font-size: 21px; margin: 0; }
+#connectionBadge {
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 20px;
+  background: #e5e7eb;
+}
+#loginScreen {
+  width: min(430px, calc(100% - 30px));
+  margin: 70px auto;
+  padding: 26px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 8px 28px #1720330d;
+}
+#loginScreen h2 { margin-top: 0; }
+#playerName {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 9px;
+  margin: 8px 0 14px;
+}
+#joinButton { width: 100%; }
+#loginStatus, #appStatus {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 13px;
+  line-height: 1.6;
+  margin-top: 12px;
+}
+#app { display: none; padding: 16px; }
+.layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 250px;
+  grid-template-columns: minmax(0, 1fr) 290px;
   gap: 16px;
+  max-width: 1400px;
+  margin: auto;
+}
+.panel {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.panelTitle {
+  padding: 14px 16px;
+  font-weight: bold;
+  border-bottom: 1px solid var(--border);
 }
 #roomCanvas {
-  display: block;
   width: 100%;
-  aspect-ratio: 16 / 10;
+  display: block;
   background: #f8fafc;
-  border: 1px solid #d5deea;
-  border-radius: 8px;
   touch-action: manipulation;
+  cursor: crosshair;
 }
-#playersList { padding-left: 20px; overflow-wrap: anywhere; }
-#playersList li { margin: 10px 0; }
-.small { color: #65748a; font-size: 13px; line-height: 1.7; }
-.controls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-@media (max-width: 720px) {
-  .room-layout { grid-template-columns: 1fr; }
-  header { padding: 0 12px; }
-  main { margin-top: 14px; }
+.roomHelp {
+  padding: 10px 14px;
+  font-size: 12px;
+  color: #64748b;
+  border-top: 1px solid var(--border);
+}
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px;
+  border-top: 1px solid var(--border);
+}
+#participants { padding: 8px 12px; }
+.participant {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 4px;
+  border-bottom: 1px solid #edf1f7;
+  overflow-wrap: anywhere;
+}
+.participant:last-child { border-bottom: 0; }
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex: 0 0 12px;
+}
+.you {
+  font-size: 11px;
+  background: #e8eefc;
+  color: #1d4ed8;
+  padding: 3px 6px;
+  border-radius: 5px;
+}
+#participantCount { color: #64748b; font-size: 12px; font-weight: normal; }
+.mediaPanel { margin-top: 16px; }
+#videos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+  padding: 12px;
+}
+.videoTile {
+  min-width: 0;
+  background: #111827;
+  border-radius: 10px;
+  overflow: hidden;
+  color: white;
+}
+.videoTile video {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+  background: #111827;
+}
+.videoLabel { font-size: 12px; padding: 7px 9px; }
+.mediaHelp { padding: 0 12px 12px; font-size: 12px; color: #64748b; }
+#appStatus {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+@media (max-width: 800px) {
+  .layout { grid-template-columns: 1fr; }
+  header { padding: 12px; }
+  #app { padding: 10px; }
 }
 </style>
 </head>
@@ -93,46 +175,77 @@ button.secondary { background: #64748b; }
 <body>
 <header>
   <h1>StudyRoom</h1>
-  <button id="leaveButton" class="secondary" style="display:none">退室する</button>
+  <span id="connectionBadge">未接続</span>
 </header>
 
-<section id="loginScreen" class="panel">
-  <h2>StudyRoomに入室</h2>
-  <p class="small">名前を入力して、同じ学習ルームに参加します。</p>
-  <input id="nameInput" maxlength="20" placeholder="表示する名前">
-  <button id="joinButton">入室する</button>
-  <p id="loginMessage" class="small" role="status">Firebaseに接続する準備ができています。</p>
+<section id="loginScreen">
+  <h2>StudyRoomに参加</h2>
+  <p>表示する名前を入力してください。</p>
+  <input id="playerName" maxlength="20" placeholder="名前" autocomplete="nickname">
+  <button id="joinButton" class="primary">入室する</button>
+  <div id="loginStatus" role="status">Firebaseに接続する準備ができています。</div>
 </section>
 
 <main id="app">
-  <div id="status" role="status">接続状態を確認しています。</div>
-  <div class="room-layout">
-    <section class="panel">
-      <h2 style="margin-top:0">学習ルーム</h2>
-      <p class="small">部屋の中をクリックすると、その位置へ移動します。矢印キーやW・A・S・Dでも移動できます。</p>
-      <canvas id="roomCanvas" width="800" height="500"></canvas>
-      <div class="controls">
-        <button id="upButton" class="secondary">上へ</button>
-        <button id="downButton" class="secondary">下へ</button>
-        <button id="leftButton" class="secondary">左へ</button>
-        <button id="rightButton" class="secondary">右へ</button>
+  <div class="layout">
+    <section>
+      <div class="panel">
+        <div class="panelTitle">学習ルーム</div>
+        <canvas id="roomCanvas" width="900" height="560"></canvas>
+        <div class="roomHelp">
+          WASDキー・矢印キーで移動できます。床をクリックしても移動できます。
+          別の端末・ブラウザで参加すると、別の参加者として確認できます。
+        </div>
+        <div class="controls">
+          <button id="mediaButton" class="primary">マイク・カメラを開始</button>
+          <button id="micButton" class="secondary" disabled>マイクOFF</button>
+          <button id="cameraButton" class="secondary" disabled>カメラOFF</button>
+          <button id="leaveButton" class="danger">退室する</button>
+        </div>
+      </div>
+
+      <div class="panel mediaPanel">
+        <div class="panelTitle">音声・ビデオ</div>
+        <div id="videos">
+          <div class="videoTile" id="localVideoTile">
+            <video id="localVideo" autoplay playsinline muted></video>
+            <div class="videoLabel">自分（ローカル）</div>
+          </div>
+        </div>
+        <div class="mediaHelp">
+          音声・映像通信はブラウザの許可が必要です。
+          カメラとマイクを使うには、HTTPSまたはlocalhostで開いてください。
+        </div>
       </div>
     </section>
-    <aside class="panel">
-      <h2 style="margin-top:0">参加者</h2>
-      <p id="playerCount" class="small">参加者を読み込んでいます。</p>
-      <ul id="playersList"></ul>
-      <p class="small">参加者の位置はFirebase Realtime Databaseを通して共有されます。</p>
+
+    <aside>
+      <div class="panel">
+        <div class="panelTitle">
+          参加者
+          <span id="participantCount"></span>
+        </div>
+        <div id="participants">
+          参加者情報を取得しています。
+        </div>
+      </div>
+      <div id="appStatus" role="status">
+        Firebase接続を確認しています。
+      </div>
     </aside>
   </div>
 </main>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
+
 <script>
 "use strict";
 
-/* Firebase Consoleで取得した設定 */
+/* Firebase設定：使用中のプロジェクト */
 const firebaseConfig = {
-  apiKey: "AIzaSyAXliKkcuGSFUvYmfxMfiY6SgYWdos2RKg",
+  apiKey: "AIzaSyAXkKkcuGSFUvYmfxMfiY6SgYWdos2RKg",
   authDomain: "reservelink-efb43.firebaseapp.com",
   databaseURL: "https://reservelink-efb43-default-rtdb.firebaseio.com",
   projectId: "reservelink-efb43",
@@ -141,439 +254,650 @@ const firebaseConfig = {
   appId: "1:134662112302:web:9cf6ceb06c2eadb44e0bbf"
 };
 
+const ROOM_PATH = "rooms/main";
+const COLORS = ["#2563eb", "#dc2626", "#059669", "#9333ea",
+                "#ea580c", "#0891b2", "#be185d", "#4f46e5"];
+
+let auth = null;
+let db = null;
+let currentUser = null;
+let playerRef = null;
+let playersRef = null;
+let playersListener = null;
+let connectionListener = null;
+let connected = false;
+let joined = false;
+
+let players = {};
+let myPosition = { x: 450, y: 280 };
+let myName = "";
+let myColor = COLORS[0];
+
+let localStream = null;
+let audioEnabled = true;
+let videoEnabled = true;
+const peerConnections = new Map();
+const callRefs = new Map();
+const callListeners = new Map();
+const candidateListeners = new Map();
+const remoteCandidateQueues = new Map();
+const offeredPeers = new Set();
+const answeredPeers = new Set();
+const addedTrackPeers = new Set();
+
+const rtcConfig = {
+  iceServers: [
+    { urls: "stun:stun.l.google.com:19302" },
+    { urls: "stun:stun1.l.google.com:19302" }
+  ]
+};
+
 const $ = id => document.getElementById(id);
-const loginScreen = $("loginScreen");
-const appScreen = $("app");
-const loginButton = $("joinButton");
-const loginMessage = $("loginMessage");
-const statusBox = $("status");
 const canvas = $("roomCanvas");
 const ctx = canvas.getContext("2d");
 
-let auth;
-let db;
-let currentUser = null;
-let myPlayerRef = null;
-let playersRef = null;
-let connectedRef = null;
-let connectedCallback = null;
-let playersCallback = null;
-let joined = false;
-let moving = false;
-let writeTimer = null;
-let lastWriteAt = 0;
-let myName = "";
-let myColor = "#2563eb";
-let players = {};
-let lastError = "";
-let lastPositionWrite = Promise.resolve();
-
-const COLORS = [
-  "#2563eb", "#db2777", "#059669", "#9333ea",
-  "#ea580c", "#0891b2", "#4f46e5", "#be123c"
-];
+function setLoginStatus(message) {
+  $("loginStatus").textContent = message;
+}
+function setAppStatus(message) {
+  $("appStatus").textContent = message;
+}
+function setConnectionBadge(message, color) {
+  $("connectionBadge").textContent = message;
+  $("connectionBadge").style.background = color || "#e5e7eb";
+}
+function errorText(error) {
+  return (error && error.code ? error.code + ": " : "") +
+         (error && error.message ? error.message : String(error));
+}
+function showError(message, error) {
+  const full = message + (error ? "\n" + errorText(error) : "");
+  setLoginStatus(full);
+  setAppStatus(full);
+  console.error(full, error || "");
+}
 
 try {
   if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
   auth = firebase.auth();
   db = firebase.database();
-  setStatus("Firebaseを初期化しました。入室できます。", "ok");
 } catch (error) {
-  loginMessage.textContent = "Firebase初期化エラー: " + error.message;
-  loginButton.disabled = true;
+  showError("Firebaseの初期化に失敗しました。設定を確認してください。", error);
 }
 
-function setStatus(message, type = "") {
-  statusBox.textContent = message;
-  statusBox.className = type;
-}
-
-function setLoginMessage(message) {
-  loginMessage.textContent = message;
-}
-
-function errorText(error) {
-  const code = error && error.code ? error.code : "unknown";
-  const message = error && error.message ? error.message : String(error);
-  return code + ": " + message;
-}
-
-function showError(where, error) {
-  lastError = where + " — " + errorText(error);
-  console.error(lastError, error);
-  if (joined) {
-    setStatus("同期エラー: " + lastError, "error");
-  } else {
-    setLoginMessage("エラー: " + lastError);
-  }
-}
-
-function makeInitialPosition() {
+function randomPosition() {
   return {
-    x: 100 + Math.random() * 600,
-    y: 100 + Math.random() * 300
+    x: 60 + Math.random() * (canvas.width - 120),
+    y: 70 + Math.random() * (canvas.height - 120)
   };
 }
 
-function safeNumber(value, fallback) {
-  const n = Number(value);
-  return Number.isFinite(n) ? n : fallback;
+function safeName(value) {
+  return String(value || "名前なし").slice(0, 20);
 }
 
-function clampPosition(x, y) {
-  return {
-    x: Math.max(22, Math.min(canvas.width - 22, x)),
-    y: Math.max(36, Math.min(canvas.height - 22, y))
-  };
+function sortedPairId(uidA, uidB) {
+  return [uidA, uidB].sort().join("__");
 }
 
 async function joinRoom() {
-  if (!auth || !db) {
-    setLoginMessage("Firebaseを初期化できません。設定を確認してください。");
-    return;
-  }
   if (joined) return;
 
-  myName = $("nameInput").value.trim();
+  myName = $("playerName").value.trim();
   if (!myName) {
-    setLoginMessage("名前を入力してください。");
-    $("nameInput").focus();
+    setLoginStatus("名前を入力してください。");
+    $("playerName").focus();
+    return;
+  }
+  if (!auth || !db) {
+    setLoginStatus("Firebaseを初期化できません。設定と通信環境を確認してください。");
     return;
   }
 
-  loginButton.disabled = true;
-  setLoginMessage("Firebaseにログインしています…");
+  $("joinButton").disabled = true;
+  setLoginStatus("認証とデータベース接続を確認しています…");
 
   try {
     if (!auth.currentUser) {
       await auth.signInAnonymously();
     }
-
     currentUser = auth.currentUser;
-    if (!currentUser || !currentUser.uid) {
-      throw new Error("ログイン後のユーザーIDを取得できませんでした。");
-    }
+    if (!currentUser) throw new Error("認証ユーザーを取得できませんでした。");
 
-    // すべての端末が同じパスを使うことが重要
-    playersRef = db.ref("rooms/main/players");
-    myPlayerRef = playersRef.child(currentUser.uid);
-    connectedRef = db.ref(".info/connected");
-
-    const initial = makeInitialPosition();
+    playersRef = db.ref(ROOM_PATH + "/players");
+    playerRef = playersRef.child(currentUser.uid);
+    myPosition = randomPosition();
     myColor = COLORS[Math.floor(Math.random() * COLORS.length)];
 
-    // 接続が切れた場合にサーバー側で自分の参加データを削除
-    await myPlayerRef.onDisconnect().remove();
+    // 参加者一覧の購読を、書き込みより先に開始する。
+    playersListener = playersRef.on("value", snapshot => {
+      players = snapshot.val() || {};
+      renderParticipants();
+      drawRoom();
+      setAppStatus(
+        "参加者データを取得しました。\n" +
+        "参加者数: " + Object.keys(players).length + "\n" +
+        "自分のUID: " + currentUser.uid
+      );
+      connectToAvailablePeers();
+    }, error => {
+      showError("参加者一覧の読み取りに失敗しました。Realtime Databaseの読み取りルールを確認してください。", error);
+    });
 
-    // 既存データを読んでから、自分のデータを登録
-    const snapshot = await myPlayerRef.once("value");
-    const existing = snapshot.val() || {};
-
-    const position = clampPosition(
-      safeNumber(existing.x, initial.x),
-      safeNumber(existing.y, initial.y)
-    );
-
-    await myPlayerRef.set({
+    // 自分のデータを書き込む。
+    await playerRef.set({
       uid: currentUser.uid,
       name: myName,
-      x: position.x,
-      y: position.y,
-      color: existing.color || myColor,
-      zone: "main",
+      x: myPosition.x,
+      y: myPosition.y,
+      color: myColor,
+      zone: "study",
+      joinedAt: firebase.database.ServerValue.TIMESTAMP,
       updatedAt: firebase.database.ServerValue.TIMESTAMP
     });
 
+    // 書き込み後に読み返し、実際に保存されたことを確認する。
+    const verify = await playerRef.once("value");
+    if (!verify.exists()) {
+      throw new Error("書き込み後の確認でデータが見つかりません。");
+    }
+
+    // 切断時の自動削除を登録する。
+    try {
+      await playerRef.onDisconnect().remove();
+    } catch (disconnectError) {
+      console.warn("切断時削除の登録に失敗:", disconnectError);
+    }
+
     joined = true;
-    loginScreen.style.display = "none";
-    appScreen.style.display = "block";
-    $("leaveButton").style.display = "inline-block";
+    $("loginScreen").style.display = "none";
+    $("app").style.display = "block";
+    setConnectionBadge("入室済み", "#dcfce7");
+    setAppStatus("入室成功。参加者データの読み取り・書き込みを確認しました。\nUID: " + currentUser.uid);
+    renderParticipants();
+    drawRoom();
 
-    setStatus("入室しました。ほかの端末との同期を確認しています…");
-
-    // 接続状態を監視。切断・再接続を画面に表示
-    connectedCallback = snapshot => {
-      const online = snapshot.val() === true;
-      if (online) {
-        setStatus("Firebase接続中。参加者の位置を同期しています。", "ok");
-        // 再接続後に自分のデータが消えていた場合は再登録
-        ensureOwnPlayer().catch(error => showError("再接続時の再登録", error));
-      } else {
-        setStatus("Firebaseとの接続が切れています。再接続を待っています。", "error");
+    connectionListener = db.ref(".info/connected").on("value", snapshot => {
+      connected = snapshot.val() === true;
+      setConnectionBadge(
+        connected ? "Firebase接続中" : "Firebase切断中",
+        connected ? "#dcfce7" : "#fee2e2"
+      );
+      if (connected && joined) {
+        playerRef.onDisconnect().remove().catch(console.warn);
+        playerRef.update({
+          name: myName,
+          x: myPosition.x,
+          y: myPosition.y,
+          color: myColor,
+          updatedAt: firebase.database.ServerValue.TIMESTAMP
+        }).catch(error => showError("再接続後の位置登録に失敗しました。", error));
       }
-    };
-    connectedRef.on("value", connectedCallback, error => showError("接続状態の受信", error));
-
-    // このイベントで全員の参加・退室・移動を受信する
-    playersCallback = snapshot => {
-      players = snapshot.val() || {};
-      renderPlayers();
-      drawRoom();
-      $("playerCount").textContent = "参加者：" + Object.keys(players).length + "人";
-
-      if (currentUser && players[currentUser.uid]) {
-        const me = players[currentUser.uid];
-        if (me.name !== myName) {
-          console.warn("自分の参加データの名前が異なっています。");
-        }
-      }
-    };
-    playersRef.on("value", playersCallback, error => showError("参加者データの受信", error));
-
-    // 最初の参加者一覧が受信されたかを画面に出す
-    setStatus("入室済み。同期データを受信しています。", "ok");
+    }, error => showError("接続状態の取得に失敗しました。", error));
 
   } catch (error) {
-    showError("入室処理", error);
-    try {
-      if (myPlayerRef) await myPlayerRef.onDisconnect().cancel();
-    } catch (_) {}
-    joined = false;
-    loginButton.disabled = false;
+    showError("入室に失敗しました。認証・Database URL・ルールを確認してください。", error);
+    $("joinButton").disabled = false;
+    if (playersRef && playersListener) {
+      playersRef.off("value", playersListener);
+      playersListener = null;
+    }
   }
 }
 
-async function ensureOwnPlayer() {
-  if (!joined || !myPlayerRef || !currentUser) return;
+function renderParticipants() {
+  const container = $("participants");
+  const entries = Object.entries(players || {});
+  container.replaceChildren();
+  $("participantCount").textContent = "（" + entries.length + "人）";
 
-  const snapshot = await myPlayerRef.once("value");
-  if (snapshot.exists()) return;
-
-  const pos = makeInitialPosition();
-  await myPlayerRef.set({
-    uid: currentUser.uid,
-    name: myName,
-    x: pos.x,
-    y: pos.y,
-    color: myColor,
-    zone: "main",
-    updatedAt: firebase.database.ServerValue.TIMESTAMP
-  });
-}
-
-function queuePositionWrite() {
-  if (!joined || !myPlayerRef || !currentUser) return;
-
-  // 描画は即時、通信は最大約15回/秒に制限
-  if (writeTimer) return;
-  const delay = Math.max(0, 66 - (Date.now() - lastWriteAt));
-
-  writeTimer = setTimeout(() => {
-    writeTimer = null;
-    lastWriteAt = Date.now();
-
-    const me = players[currentUser.uid] || {};
-    const position = {
-      x: safeNumber(me.x, 100),
-      y: safeNumber(me.y, 100)
-    };
-
-    // 連続更新が競合しないよう、書き込みを順番に実行
-    lastPositionWrite = lastPositionWrite
-      .catch(() => {})
-      .then(() => myPlayerRef.update({
-        x: position.x,
-        y: position.y,
-        updatedAt: firebase.database.ServerValue.TIMESTAMP
-      }))
-      .catch(error => showError("位置の送信", error));
-  }, delay);
-}
-
-function moveBy(dx, dy) {
-  if (!joined || !currentUser) return;
-
-  const me = players[currentUser.uid];
-  if (!me) {
-    setStatus("自分の参加データを待っています。", "error");
+  if (!entries.length) {
+    container.textContent = "参加者データがありません。";
     return;
   }
 
-  const pos = clampPosition(
-    safeNumber(me.x, 100) + dx,
-    safeNumber(me.y, 100) + dy
-  );
+  entries.sort((a, b) => safeName(a[1].name).localeCompare(safeName(b[1].name), "ja"));
 
-  // 自分の画面はすぐに動かし、その後Firebaseに送信
-  players[currentUser.uid] = { ...me, x: pos.x, y: pos.y };
-  drawRoom();
-  queuePositionWrite();
-}
-
-function renderPlayers() {
-  const list = $("playersList");
-  list.replaceChildren();
-
-  const entries = Object.entries(players);
-  for (const [uid, player] of entries) {
-    const li = document.createElement("li");
-    const name = document.createElement("span");
-    name.textContent = (player && player.name) ? player.name : "名前なし";
-    name.style.fontWeight = uid === (currentUser && currentUser.uid) ? "700" : "400";
+  for (const [uid, data] of entries) {
+    const row = document.createElement("div");
+    row.className = "participant";
 
     const dot = document.createElement("span");
-    dot.textContent = "● ";
-    dot.style.color = player && player.color ? player.color : "#64748b";
+    dot.className = "dot";
+    dot.style.background = data.color || "#64748b";
 
-    li.append(dot, name);
-    if (uid === (currentUser && currentUser.uid)) {
+    const name = document.createElement("span");
+    name.textContent = safeName(data.name);
+    name.style.flex = "1";
+
+    row.append(dot, name);
+    if (currentUser && uid === currentUser.uid) {
       const you = document.createElement("span");
-      you.textContent = "（自分）";
-      you.className = "small";
-      li.append(you);
+      you.className = "you";
+      you.textContent = "自分";
+      row.append(you);
     }
-    list.appendChild(li);
-  }
-
-  if (entries.length === 0) {
-    const li = document.createElement("li");
-    li.textContent = "参加者はいません。";
-    list.appendChild(li);
+    container.append(row);
   }
 }
 
 function drawRoom() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  // 背景の床グリッド
   ctx.fillStyle = "#f8fafc";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.strokeStyle = "#e5eaf1";
+
+  ctx.strokeStyle = "#e2e8f0";
   ctx.lineWidth = 1;
-  for (let x = 0; x <= canvas.width; x += 40) {
-    ctx.beginPath();
-    ctx.moveTo(x, 0);
-    ctx.lineTo(x, canvas.height);
-    ctx.stroke();
+  for (let x = 0; x < canvas.width; x += 40) {
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
   }
-  for (let y = 0; y <= canvas.height; y += 40) {
-    ctx.beginPath();
-    ctx.moveTo(0, y);
-    ctx.lineTo(canvas.width, y);
-    ctx.stroke();
+  for (let y = 0; y < canvas.height; y += 40) {
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
   }
 
-  // 机
-  for (const [x, y] of [[120,120],[280,120],[440,120],[600,120],
-                         [120,340],[280,340],[440,340],[600,340]]) {
-    ctx.fillStyle = "#d9e3ee";
-    ctx.fillRect(x - 42, y - 22, 84, 44);
-    ctx.strokeStyle = "#aebdce";
-    ctx.strokeRect(x - 42, y - 22, 84, 44);
-  }
+  ctx.fillStyle = "#e0f2fe";
+  ctx.fillRect(20, 20, canvas.width - 40, 50);
+  ctx.fillStyle = "#075985";
+  ctx.font = "bold 18px sans-serif";
+  ctx.fillText("STUDY ROOM", 35, 51);
 
-  for (const [uid, player] of Object.entries(players)) {
-    if (!player) continue;
-    const x = safeNumber(player.x, 100);
-    const y = safeNumber(player.y, 100);
-    const color = player.color || "#2563eb";
+  for (const [uid, data] of Object.entries(players || {})) {
+    const isMe = currentUser && uid === currentUser.uid;
+    const x = isMe ? myPosition.x : Number(data.x);
+    const y = isMe ? myPosition.y : Number(data.y);
+    if (!Number.isFinite(x) || !Number.isFinite(y)) continue;
 
     ctx.beginPath();
     ctx.arc(x, y, 15, 0, Math.PI * 2);
-    ctx.fillStyle = color;
+    ctx.fillStyle = data.color || "#64748b";
     ctx.fill();
-    ctx.lineWidth = uid === (currentUser && currentUser.uid) ? 4 : 2;
-    ctx.strokeStyle = uid === (currentUser && currentUser.uid) ? "#172554" : "#ffffff";
-    ctx.stroke();
 
-    ctx.font = "14px Arial, sans-serif";
+    if (isMe) {
+      ctx.beginPath();
+      ctx.arc(x, y, 20, 0, Math.PI * 2);
+      ctx.strokeStyle = "#0f172a";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+
+    ctx.font = "13px sans-serif";
     ctx.textAlign = "center";
-    ctx.textBaseline = "top";
-    const label = String(player.name || "名前なし").slice(0, 20);
-    const width = ctx.measureText(label).width + 12;
-    ctx.fillStyle = "rgba(255,255,255,0.94)";
-    ctx.fillRect(x - width / 2, y + 19, width, 22);
-    ctx.fillStyle = "#243247";
-    ctx.fillText(label, x, y + 23);
+    ctx.fillStyle = "#0f172a";
+    ctx.fillText(safeName(data.name), x, y + 34);
+  }
+  ctx.textAlign = "start";
+}
+
+let writeQueue = Promise.resolve();
+function saveMyPosition() {
+  if (!joined || !playerRef || !currentUser) return;
+  const position = { x: myPosition.x, y: myPosition.y };
+  writeQueue = writeQueue
+    .catch(() => {})
+    .then(() => playerRef.update({
+      x: position.x,
+      y: position.y,
+      updatedAt: firebase.database.ServerValue.TIMESTAMP
+    }))
+    .catch(error => showError("位置の同期に失敗しました。", error));
+}
+
+function moveBy(dx, dy) {
+  if (!joined) return;
+  myPosition.x = Math.max(25, Math.min(canvas.width - 25, myPosition.x + dx));
+  myPosition.y = Math.max(80, Math.min(canvas.height - 25, myPosition.y + dy));
+  drawRoom();
+  saveMyPosition();
+}
+
+document.addEventListener("keydown", event => {
+  if (!joined || ["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)) return;
+  const key = event.key.toLowerCase();
+  const step = event.shiftKey ? 25 : 12;
+  const movement = {
+    arrowup: [0, -step], w: [0, -step],
+    arrowdown: [0, step], s: [0, step],
+    arrowleft: [-step, 0], a: [-step, 0],
+    arrowright: [step, 0], d: [step, 0]
+  };
+  if (movement[key]) {
+    event.preventDefault();
+    moveBy(...movement[key]);
+  }
+});
+
+canvas.addEventListener("click", event => {
+  if (!joined) return;
+  const rect = canvas.getBoundingClientRect();
+  myPosition.x = (event.clientX - rect.left) * canvas.width / rect.width;
+  myPosition.y = (event.clientY - rect.top) * canvas.height / rect.height;
+  myPosition.x = Math.max(25, Math.min(canvas.width - 25, myPosition.x));
+  myPosition.y = Math.max(80, Math.min(canvas.height - 25, myPosition.y));
+  drawRoom();
+  saveMyPosition();
+});
+
+/* WebRTC：参加者同士の音声・映像通信 */
+function createPeerConnection(peerUid) {
+  if (peerConnections.has(peerUid)) return peerConnections.get(peerUid);
+
+  const pc = new RTCPeerConnection(rtcConfig);
+  peerConnections.set(peerUid, pc);
+  remoteCandidateQueues.set(peerUid, []);
+
+  pc.onicecandidate = event => {
+    if (!event.candidate || !currentUser) return;
+    const callRef = callRefs.get(peerUid);
+    if (!callRef) return;
+    callRef.child("candidates").child(currentUser.uid).push(event.candidate.toJSON())
+      .catch(error => showAppMediaError("ICE候補の送信に失敗しました。", error));
+  };
+
+  pc.ontrack = event => {
+    let video = document.getElementById("remote-" + peerUid);
+    let tile = document.getElementById("tile-" + peerUid);
+    if (!tile) {
+      tile = document.createElement("div");
+      tile.className = "videoTile";
+      tile.id = "tile-" + peerUid;
+
+      video = document.createElement("video");
+      video.id = "remote-" + peerUid;
+      video.autoplay = true;
+      video.playsInline = true;
+
+      const label = document.createElement("div");
+      label.className = "videoLabel";
+      label.textContent = safeName((players[peerUid] || {}).name);
+
+      tile.append(video, label);
+      $("videos").append(tile);
+    }
+    video.srcObject = event.streams[0];
+    video.play().catch(() => {});
+  };
+
+  pc.onconnectionstatechange = () => {
+    setAppStatus(
+      "Firebase: " + (connected ? "接続中" : "切断中") +
+      "\n音声・映像（" + safeName((players[peerUid] || {}).name) + "）: " +
+      pc.connectionState
+    );
+  };
+
+  pc.onicecandidateerror = event => {
+    console.warn("ICE候補エラー:", event);
+  };
+
+  return pc;
+}
+
+function addLocalTracks(peerUid, pc) {
+  if (!localStream || addedTrackPeers.has(peerUid)) return;
+  for (const track of localStream.getTracks()) {
+    pc.addTrack(track, localStream);
+  }
+  addedTrackPeers.add(peerUid);
+}
+
+async function flushCandidateQueue(peerUid, pc) {
+  const queue = remoteCandidateQueues.get(peerUid) || [];
+  while (queue.length) {
+    const candidate = queue.shift();
+    try {
+      await pc.addIceCandidate(new RTCIceCandidate(candidate));
+    } catch (error) {
+      console.warn("ICE候補を追加できませんでした:", error);
+    }
   }
 }
 
-canvas.addEventListener("click", event => {
+function listenForCandidates(peerUid, callRef) {
+  if (candidateListeners.has(peerUid)) return;
+  const otherUid = peerUid;
+  const candidatesRef = callRef.child("candidates").child(otherUid);
+
+  const callback = snapshot => {
+    const value = snapshot.val();
+    if (!value) return;
+    const pc = peerConnections.get(peerUid);
+    if (!pc) return;
+
+    if (pc.remoteDescription && pc.remoteDescription.type) {
+      pc.addIceCandidate(new RTCIceCandidate(value)).catch(error => {
+        console.warn("ICE候補を追加できませんでした:", error);
+      });
+    } else {
+      const queue = remoteCandidateQueues.get(peerUid) || [];
+      queue.push(value);
+      remoteCandidateQueues.set(peerUid, queue);
+    }
+  };
+
+  candidatesRef.on("child_added", callback, error => {
+    showAppMediaError("ICE候補の受信に失敗しました。", error);
+  });
+  candidateListeners.set(peerUid, { ref: candidatesRef, callback });
+}
+
+async function connectToPeer(peerUid) {
+  if (!joined || !currentUser || peerUid === currentUser.uid) return;
+
+  const pc = createPeerConnection(peerUid);
+  const callId = sortedPairId(currentUser.uid, peerUid);
+  const callRef = db.ref(ROOM_PATH + "/calls/" + callId);
+  callRefs.set(peerUid, callRef);
+
+  addLocalTracks(peerUid, pc);
+  listenForCandidates(peerUid, callRef);
+
+  if (callListeners.has(peerUid)) return;
+
+  const callback = async snapshot => {
+    const call = snapshot.val();
+    if (!call || !call.offer || !call.offer.sdp) return;
+
+    try {
+      // UIDの辞書順で一方だけがofferを作る。
+      const isOfferer = currentUser.uid.localeCompare(peerUid) < 0;
+
+      if (isOfferer) {
+        if (call.answer && call.answer.sdp && !pc.currentRemoteDescription) {
+          await pc.setRemoteDescription(new RTCSessionDescription(call.answer));
+          await flushCandidateQueue(peerUid, pc);
+        }
+        return;
+      }
+
+      // 相手が作成したofferに対して、answerを1回だけ返す。
+      if (!answeredPeers.has(peerUid) &&
+          (!pc.currentRemoteDescription || pc.currentRemoteDescription.type !== "offer")) {
+        answeredPeers.add(peerUid);
+        addLocalTracks(peerUid, pc);
+        await pc.setRemoteDescription(new RTCSessionDescription(call.offer));
+        await flushCandidateQueue(peerUid, pc);
+        const answer = await pc.createAnswer();
+        await pc.setLocalDescription(answer);
+        await callRef.update({
+          answer: { type: answer.type, sdp: answer.sdp }
+        });
+      }
+    } catch (error) {
+      answeredPeers.delete(peerUid);
+      showAppMediaError("音声・映像の接続処理に失敗しました。", error);
+    }
+  };
+
+  callRef.on("value", callback, error => {
+    showAppMediaError("通話情報の読み取りに失敗しました。", error);
+  });
+  callListeners.set(peerUid, { ref: callRef, callback });
+
+  // offerを作るのはUID順で先の参加者だけ。
+  const isOfferer = currentUser.uid.localeCompare(peerUid) < 0;
+  if (isOfferer && localStream && !offeredPeers.has(peerUid)) {
+    offeredPeers.add(peerUid);
+    try {
+      await callRef.onDisconnect().remove();
+      const offer = await pc.createOffer();
+      await pc.setLocalDescription(offer);
+      await callRef.set({
+        from: currentUser.uid,
+        to: peerUid,
+        offer: { type: offer.type, sdp: offer.sdp },
+        createdAt: firebase.database.ServerValue.TIMESTAMP
+      });
+    } catch (error) {
+      offeredPeers.delete(peerUid);
+      showAppMediaError("通話の開始に失敗しました。", error);
+    }
+  }
+}
+
+function connectToAvailablePeers() {
   if (!joined || !currentUser) return;
+  for (const uid of Object.keys(players || {})) {
+    if (uid !== currentUser.uid) {
+      connectToPeer(uid).catch(error => showAppMediaError("参加者への接続に失敗しました。", error));
+    }
+  }
+}
 
-  const rect = canvas.getBoundingClientRect();
-  const x = (event.clientX - rect.left) * canvas.width / rect.width;
-  const y = (event.clientY - rect.top) * canvas.height / rect.height;
+function showAppMediaError(message, error) {
+  const detail = message + "\n" + errorText(error);
+  setAppStatus(detail);
+  console.error(detail, error);
+}
 
-  const me = players[currentUser.uid];
-  if (!me) return;
-
-  const pos = clampPosition(x, y);
-  players[currentUser.uid] = { ...me, x: pos.x, y: pos.y };
-  drawRoom();
-  queuePositionWrite();
-});
-
-document.addEventListener("keydown", event => {
-  if (!joined) return;
-  if (["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)) return;
-
-  const step = event.shiftKey ? 20 : 8;
-  let dx = 0, dy = 0;
-
-  if (event.key === "ArrowUp" || event.key.toLowerCase() === "w") dy = -step;
-  else if (event.key === "ArrowDown" || event.key.toLowerCase() === "s") dy = step;
-  else if (event.key === "ArrowLeft" || event.key.toLowerCase() === "a") dx = -step;
-  else if (event.key === "ArrowRight" || event.key.toLowerCase() === "d") dx = step;
-  else return;
-
-  event.preventDefault();
-  moveBy(dx, dy);
-});
-
-$("upButton").addEventListener("click", () => moveBy(0, -20));
-$("downButton").addEventListener("click", () => moveBy(0, 20));
-$("leftButton").addEventListener("click", () => moveBy(-20, 0));
-$("rightButton").addEventListener("click", () => moveBy(20, 0));
-
-async function leaveRoom() {
-  if (!joined && !currentUser) return;
-
-  joined = false;
-  if (writeTimer) {
-    clearTimeout(writeTimer);
-    writeTimer = null;
+async function startMedia() {
+  if (!joined) {
+    setAppStatus("先にStudyRoomへ入室してください。");
+    return;
+  }
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    setAppStatus("このブラウザではカメラ・マイクを利用できません。HTTPSで開いているか確認してください。");
+    return;
   }
 
+  $("mediaButton").disabled = true;
   try {
-    if (playersRef && playersCallback) {
-      playersRef.off("value", playersCallback);
+    if (!localStream) {
+      localStream = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+        video: { facingMode: "user" }
+      });
+      $("localVideo").srcObject = localStream;
     }
-    if (connectedRef && connectedCallback) {
-      connectedRef.off("value", connectedCallback);
-    }
-    if (myPlayerRef) {
-      await myPlayerRef.onDisconnect().cancel();
-      await myPlayerRef.remove();
-    }
+
+    audioEnabled = true;
+    videoEnabled = true;
+    for (const track of localStream.getAudioTracks()) track.enabled = audioEnabled;
+    for (const track of localStream.getVideoTracks()) track.enabled = videoEnabled;
+
+    $("micButton").disabled = false;
+    $("cameraButton").disabled = false;
+    $("micButton").textContent = "マイクON";
+    $("cameraButton").textContent = "カメラON";
+    $("mediaButton").textContent = "マイク・カメラ起動済み";
+
+    // メディアを取得してから参加者との通話を開始する。
+    connectToAvailablePeers();
+    setAppStatus("マイク・カメラを起動しました。参加者がいる場合は音声・映像接続を開始します。");
   } catch (error) {
-    console.error("退室処理:", error);
+    showAppMediaError(
+      "マイク・カメラを起動できません。ブラウザの権限と端末の設定を確認してください。",
+      error
+    );
+  } finally {
+    $("mediaButton").disabled = false;
+  }
+}
+
+$("micButton").addEventListener("click", () => {
+  if (!localStream) return;
+  audioEnabled = !audioEnabled;
+  for (const track of localStream.getAudioTracks()) track.enabled = audioEnabled;
+  $("micButton").textContent = audioEnabled ? "マイクON" : "マイクOFF";
+});
+
+$("cameraButton").addEventListener("click", () => {
+  if (!localStream) return;
+  videoEnabled = !videoEnabled;
+  for (const track of localStream.getVideoTracks()) track.enabled = videoEnabled;
+  $("cameraButton").textContent = videoEnabled ? "カメラON" : "カメラOFF";
+});
+
+$("mediaButton").addEventListener("click", startMedia);
+$("joinButton").addEventListener("click", joinRoom);
+$("playerName").addEventListener("keydown", event => {
+  if (event.key === "Enter") joinRoom();
+});
+
+async function leaveRoom() {
+  joined = false;
+
+  if (playersRef && playersListener) {
+    playersRef.off("value", playersListener);
+    playersListener = null;
+  }
+  if (connectionListener) {
+    db.ref(".info/connected").off("value", connectionListener);
+    connectionListener = null;
+  }
+
+  for (const [uid, item] of callListeners) {
+    item.ref.off("value", item.callback);
+  }
+  callListeners.clear();
+
+  for (const [uid, item] of candidateListeners) {
+    item.ref.off("child_added", item.callback);
+  }
+  candidateListeners.clear();
+
+  for (const pc of peerConnections.values()) pc.close();
+  peerConnections.clear();
+  callRefs.clear();
+  remoteCandidateQueues.clear();
+  offeredPeers.clear();
+  answeredPeers.clear();
+  addedTrackPeers.clear();
+
+  if (localStream) {
+    localStream.getTracks().forEach(track => track.stop());
+    localStream = null;
+  }
+
+  document.querySelectorAll('[id^="tile-"]').forEach(element => element.remove());
+  $("localVideo").srcObject = null;
+
+  try {
+    if (playerRef) await playerRef.remove();
+  } catch (error) {
+    console.warn("参加者データの削除に失敗:", error);
   }
 
   players = {};
   currentUser = null;
-  myPlayerRef = null;
+  playerRef = null;
   playersRef = null;
-  connectedRef = null;
-  playersCallback = null;
-  connectedCallback = null;
-
-  appScreen.style.display = "none";
-  loginScreen.style.display = "block";
-  $("leaveButton").style.display = "none";
-  loginButton.disabled = false;
-  setLoginMessage("退室しました。再入室できます。");
+  $("app").style.display = "none";
+  $("loginScreen").style.display = "block";
+  $("joinButton").disabled = false;
+  $("mediaButton").disabled = false;
+  $("mediaButton").textContent = "マイク・カメラを開始";
+  $("micButton").disabled = true;
+  $("cameraButton").disabled = true;
+  $("micButton").textContent = "マイクOFF";
+  $("cameraButton").textContent = "カメラOFF";
+  setConnectionBadge("退室済み");
+  setLoginStatus("退室しました。再入室できます。");
 }
 
-loginButton.addEventListener("click", joinRoom);
-$("nameInput").addEventListener("keydown", event => {
-  if (event.key === "Enter") joinRoom();
-});
 $("leaveButton").addEventListener("click", leaveRoom);
 
 window.addEventListener("beforeunload", () => {
-  // 通常のタブ終了時はFirebaseのonDisconnectが削除を担当
-  if (writeTimer) clearTimeout(writeTimer);
+  if (playerRef) playerRef.onDisconnect().remove();
 });
 
 drawRoom();
@@ -581,3 +905,42 @@ drawRoom();
 </body>
 </html>
 ```
+
+## Firebase側で必要な設定
+
+### 1. Realtime Database のルール
+
+Firebase Console → **Realtime Database → ルール** を開き、次のルールに置き換えて「公開」してください。
+
+```json
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "rooms": {
+      "main": {
+        ".read": "auth != null",
+        "players": {
+          "$uid": {
+            ".write": "auth != null && auth.uid === $uid"
+          }
+        },
+        "calls": {
+          ".write": "auth != null"
+        }
+      }
+    }
+  }
+}
+```
+
+これは動作確認用のルールです。匿名認証した利用者なら、同じルームの参加者データと通話シグナリング情報を読めます。一般公開するサービスにする場合は、アクセス制御をさらに強化してください。
+
+### 2. 動作確認の順番
+
+1. HTMLをHTTPSで開き、名前を入力して入室する。
+2. Firebase Console の `rooms/main/players` に自分のデータが追加されるか確認する。
+3. 別のブラウザまたは別端末から入室し、参加者一覧と位置が同期するか確認する。
+4. 両方の端末で「マイク・カメラを開始」を押し、ブラウザの権限を許可する。
+
+**注意：** このコードは参加者一覧・位置同期を先に確認できるようにし、音声・映像はWebRTCで接続する構成です。ただし、現在のコードでは、通話開始のタイミングによっては後から参加した側の音声・映像トラックを追加するための再ネゴシエーションが必要になる場合があります。また、STUNだけでは接続できないネットワークもあり、その場合はTURNサーバーが必要です。音声・映像まであらゆるネットワークで確実に動かすには、TURNを含む接続構成も必要です。
