@@ -16,7 +16,7 @@
 body{margin:0;background:#f4f7fb;color:var(--text);font-family:Arial,"Noto Sans JP",sans-serif}
 button,input{font:inherit}
 button{cursor:pointer}
-header{height:62px;background:white;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 20px}
+header{height:62px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 20px}
 .brand{font-size:21px;font-weight:800;color:var(--blue)}
 .header-right{display:flex;align-items:center;gap:12px;font-size:12px}
 .dot{display:inline-block;width:9px;height:9px;background:#aab3c1;border-radius:50%;margin-right:5px}
@@ -24,19 +24,19 @@ header{height:62px;background:white;border-bottom:1px solid var(--border);displa
 main{max-width:1400px;margin:auto;padding:20px}
 h1{font-size:25px;margin:0 0 8px}
 .subtitle{font-size:13px;color:var(--muted);line-height:1.7}
-.card{background:white;border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.card{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden}
 .card-title{padding:14px 16px;font-weight:800;font-size:14px;border-bottom:1px solid var(--border)}
 .card-body{padding:15px}
-button.primary{background:var(--blue);color:white;border:0;border-radius:9px;padding:11px 16px;font-weight:700}
-button.secondary{background:white;border:1px solid var(--border);border-radius:9px;padding:9px 13px;color:var(--text)}
+button.primary{background:var(--blue);color:#fff;border:0;border-radius:9px;padding:11px 16px;font-weight:700}
+button.secondary{background:#fff;border:1px solid var(--border);border-radius:9px;padding:9px 13px;color:var(--text)}
 button:disabled{opacity:.6;cursor:wait}
 #loginScreen{max-width:520px;margin:55px auto;padding:15px}
 label{display:block;font-size:12px;color:var(--muted);margin:15px 0 7px}
 input{width:100%;padding:12px;border:1px solid #d7dfeb;border-radius:9px}
 .full{width:100%;margin-top:12px}
-#message{font-size:12px;line-height:1.8;color:var(--muted);overflow-wrap:anywhere;margin-top:12px;white-space:pre-wrap}
-#message.error{color:#bd3434}
-#message.success{color:#16815a}
+#message{font-size:12px;line-height:1.9;color:var(--muted);overflow-wrap:anywhere;margin-top:12px;white-space:pre-wrap}
+#message.error{color:#bd3434;background:#fff4f4;border:1px solid #f2cccc;padding:10px;border-radius:8px}
+#message.success{color:#16815a;background:#effaf5;border:1px solid #c5ead9;padding:10px;border-radius:8px}
 #app{display:none}
 .welcome{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
 .layout{display:grid;grid-template-columns:minmax(0,1fr) 285px;gap:17px;align-items:start}
@@ -47,17 +47,17 @@ canvas{width:100%;height:auto;display:block;touch-action:manipulation}
 .legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
 .sidebar .card{margin-bottom:14px}
 .field-label{font-size:12px;color:var(--muted);margin-bottom:6px}
-.zone-button{width:100%;text-align:left;border:1px solid var(--border);background:white;border-radius:9px;padding:11px;margin-bottom:8px}
+.zone-button{width:100%;text-align:left;border:1px solid var(--border);background:#fff;border-radius:9px;padding:11px;margin-bottom:8px}
 .zone-button:last-child{margin-bottom:0}
 .zone-button strong{display:block;font-size:13px}
 .zone-button span{display:block;color:var(--muted);font-size:11px;margin-top:5px}
 .zone-button.active{background:#edf3ff;border-color:var(--blue)}
 .controls{display:grid;grid-template-columns:repeat(3,42px);gap:5px;justify-content:center;margin-top:15px}
-.controls button{height:37px;border:1px solid var(--border);background:white;border-radius:8px}
+.controls button{height:37px;border:1px solid var(--border);background:#fff;border-radius:8px}
 .controls .blank{visibility:hidden}
 .player-row{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid #eef1f5}
 .player-row:last-child{border:0}
-.avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:12px;font-weight:bold;flex-shrink:0}
+.avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:bold;flex-shrink:0}
 .player-name{font-size:13px;font-weight:700}
 .player-zone{font-size:11px;color:var(--muted);margin-top:4px}
 .empty{font-size:12px;color:var(--muted);line-height:1.8}
@@ -72,7 +72,7 @@ canvas{width:100%;height:auto;display:block;touch-action:manipulation}
   <div class="brand">StudyRoom</div>
   <div class="header-right">
     <span><i id="statusDot" class="dot"></i><span id="connectionText">未接続</span></span>
-    <button id="leaveButton" class="secondary" hidden>退出</button>
+    <button id="leaveButton" class="secondary" hidden type="button">退出</button>
   </div>
 </header>
 
@@ -84,8 +84,8 @@ canvas{width:100%;height:auto;display:block;touch-action:manipulation}
       <p class="subtitle">表示名を設定して、自習室に入室してください。</p>
       <label for="displayName">表示名（16文字以内）</label>
       <input id="displayName" maxlength="16" autocomplete="nickname" placeholder="例：StudyUser">
-      <button id="joinButton" class="primary full">自習室に入室</button>
-      <div id="message" role="status">Firebase接続設定を確認しています。</div>
+      <button id="joinButton" class="primary full" type="button">自習室に入室</button>
+      <div id="message" role="status" aria-live="polite">Firebaseの読み込みを確認しています。</div>
       <p class="subtitle">入室すると、表示名とアバターの位置がほかの参加者に表示されます。</p>
     </div>
   </div>
@@ -124,8 +124,12 @@ canvas{width:100%;height:auto;display:block;touch-action:manipulation}
           <div class="field-label">現在のエリア</div>
           <div id="myZone" style="font-size:14px;font-weight:700">静かな自習エリア</div>
           <div class="controls">
-            <button class="blank" tabindex="-1"> </button><button data-move="up">↑</button><button class="blank" tabindex="-1"> </button>
-            <button data-move="left">←</button><button data-move="down">↓</button><button data-move="right">→</button>
+            <button class="blank" tabindex="-1" type="button"> </button>
+            <button data-move="up" type="button">↑</button>
+            <button class="blank" tabindex="-1" type="button"> </button>
+            <button data-move="left" type="button">←</button>
+            <button data-move="down" type="button">↓</button>
+            <button data-move="right" type="button">→</button>
           </div>
           <p class="subtitle">矢印キーまたは WASD でも移動できます。</p>
         </div>
@@ -134,9 +138,9 @@ canvas{width:100%;height:auto;display:block;touch-action:manipulation}
       <section class="card">
         <div class="card-title">学習エリア</div>
         <div class="card-body">
-          <button class="zone-button active" data-zone="quiet"><strong>静かな自習エリア</strong><span>集中して勉強する場所</span></button>
-          <button class="zone-button" data-zone="group"><strong>グループ学習エリア</strong><span>一緒に学習する場所</span></button>
-          <button class="zone-button" data-zone="break"><strong>休憩エリア</strong><span>休憩する場所</span></button>
+          <button class="zone-button active" data-zone="quiet" type="button"><strong>静かな自習エリア</strong><span>集中して勉強する場所</span></button>
+          <button class="zone-button" data-zone="group" type="button"><strong>グループ学習エリア</strong><span>一緒に学習する場所</span></button>
+          <button class="zone-button" data-zone="break" type="button"><strong>休憩エリア</strong><span>休憩する場所</span></button>
         </div>
       </section>
 
@@ -154,7 +158,7 @@ canvas{width:100%;height:auto;display:block;touch-action:manipulation}
 <script>
 "use strict";
 
-/* Firebase Consoleのウェブアプリ設定を正確に反映 */
+/* Firebase Consoleのウェブアプリ設定 */
 const firebaseConfig = {
   apiKey: "AIzaSyAXliKkcuGSFUvYmfxMfiY6SgYWdos2RKg",
   authDomain: "reservelink-efb43.firebaseapp.com",
@@ -182,8 +186,7 @@ let playersRef = null;
 let players = {};
 let myPlayer = null;
 let joined = false;
-let writing = false;
-let pendingWrite = false;
+let entering = false;
 let lastWrite = 0;
 let moveTimer = null;
 let colorIndex = 0;
@@ -194,23 +197,43 @@ const zones = [
   {id:"break",name:"休憩エリア",x:35,y:430,w:930,h:185,color:"#fff2df"}
 ];
 
+/* 応答しない通信を検出する */
+function withTimeout(promise, ms, operation){
+  let timer;
+  const timeout = new Promise((_, reject) => {
+    timer = setTimeout(() => {
+      const err = new Error(operation+"が"+Math.round(ms/1000)+"秒以内に完了しませんでした。ネットワーク、Firebase設定、アクセスルールを確認してください。");
+      err.code = "STUDYROOM_TIMEOUT";
+      reject(err);
+    }, ms);
+  });
+  return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
+}
+
 function setMessage(text,type=""){
-  $("message").textContent=text;
-  $("message").className=type;
+  const el = $("message");
+  el.textContent = text;
+  el.className = type;
 }
 function setConnection(online,text){
   $("statusDot").classList.toggle("online",online);
-  $("connectionText").textContent=text;
+  $("connectionText").textContent = text;
 }
 function zoneAt(x,y){
   return zones.find(z=>x>=z.x&&x<=z.x+z.w&&y>=z.y&&y<=z.y+z.h)||zones[0];
 }
-function zoneById(id){return zones.find(z=>z.id===id)||zones[0]}
+function zoneById(id){
+  return zones.find(z=>z.id===id)||zones[0];
+}
 function clamp(x,y){
-  return {x:Math.max(25,Math.min(MAP_W-25,x)),y:Math.max(25,Math.min(MAP_H-25,y))};
+  return {
+    x:Math.max(25,Math.min(MAP_W-25,x)),
+    y:Math.max(25,Math.min(MAP_H-25,y))
+  };
 }
 function rounded(x,y,w,h,r,fill,stroke){
-  ctx.beginPath();ctx.roundRect(x,y,w,h,r);
+  ctx.beginPath();
+  ctx.roundRect(x,y,w,h,r);
   if(fill){ctx.fillStyle=fill;ctx.fill()}
   if(stroke){ctx.strokeStyle=stroke;ctx.stroke()}
 }
@@ -219,34 +242,51 @@ function desk(x,y,w=72,h=35){
   rounded(x+7,y+6,w-14,h-12,3,"#f3e5cf",null);
 }
 function plant(x,y){
-  ctx.fillStyle="#b7d9a7";ctx.beginPath();ctx.arc(x,y,15,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle="#b7d9a7";
+  ctx.beginPath();ctx.arc(x,y,15,0,Math.PI*2);ctx.fill();
   ctx.fillStyle="#5c9b68";
-  [[-5,-3],[5,-5],[2,5]].forEach(([dx,dy])=>{ctx.beginPath();ctx.arc(x+dx,y+dy,6,0,Math.PI*2);ctx.fill()});
+  [[-5,-3],[5,-5],[2,5]].forEach(([dx,dy])=>{
+    ctx.beginPath();ctx.arc(x+dx,y+dy,6,0,Math.PI*2);ctx.fill();
+  });
 }
 function drawPlayer(p,isMe){
   if(!p)return;
-  const x=Number(p.x)||100,y=Number(p.y)||100;
+  const x=Number(p.x)||100;
+  const y=Number(p.y)||100;
   const name=String(p.name||"U");
+
   ctx.fillStyle="rgba(30,45,65,.12)";
   ctx.beginPath();ctx.ellipse(x,y+13,17,6,0,0,Math.PI*2);ctx.fill();
-  ctx.beginPath();ctx.fillStyle=p.color||"#39a783";ctx.arc(x,y,15,0,Math.PI*2);ctx.fill();
-  ctx.lineWidth=isMe?4:2;ctx.strokeStyle="#fff";ctx.stroke();
-  ctx.fillStyle="#fff";ctx.font="bold 12px Arial";ctx.textAlign="center";ctx.textBaseline="middle";
+
+  ctx.beginPath();
+  ctx.fillStyle=p.color||"#39a783";
+  ctx.arc(x,y,15,0,Math.PI*2);ctx.fill();
+  ctx.lineWidth=isMe?4:2;
+  ctx.strokeStyle="#fff";ctx.stroke();
+
+  ctx.fillStyle="#fff";
+  ctx.font="bold 12px Arial";
+  ctx.textAlign="center";ctx.textBaseline="middle";
   ctx.fillText(name.slice(0,1).toUpperCase(),x,y+1);
   ctx.textBaseline="alphabetic";
+
   const label=name.length>12?name.slice(0,12)+"…":name;
   ctx.font="bold 13px Arial";
   const width=ctx.measureText(label).width+16;
   rounded(x-width/2,y+21,width,23,7,"#fff","#dce3ec");
-  ctx.fillStyle="#27364a";ctx.fillText(label,x,y+37);ctx.textAlign="start";
+  ctx.fillStyle="#27364a";
+  ctx.fillText(label,x,y+37);
+  ctx.textAlign="start";
 }
 function drawMap(){
   ctx.clearRect(0,0,MAP_W,MAP_H);
-  ctx.fillStyle="#f7f9fc";ctx.fillRect(0,0,MAP_W,MAP_H);
+  ctx.fillStyle="#f7f9fc";
+  ctx.fillRect(0,0,MAP_W,MAP_H);
 
   zones.forEach(z=>{
     rounded(z.x,z.y,z.w,z.h,18,z.color,"#dbe3ed");
-    ctx.fillStyle="#394b62";ctx.font="bold 20px Arial";
+    ctx.fillStyle="#394b62";
+    ctx.font="bold 20px Arial";
     ctx.fillText(z.name,z.x+22,z.y+32);
   });
 
@@ -256,116 +296,211 @@ function drawMap(){
 
   rounded(690,120,210,100,13,"#c4e6d2","#9ccfb3");
   rounded(710,140,170,60,8,"#e8f6ed",null);
+
   [[700,95],[790,95],[700,235],[790,235],[655,165],[910,165]].forEach(([x,y])=>{
-    ctx.fillStyle="#9bb6a7";ctx.beginPath();ctx.arc(x,y,12,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle="#9bb6a7";
+    ctx.beginPath();ctx.arc(x,y,12,0,Math.PI*2);ctx.fill();
   });
-  ctx.fillStyle="#47765d";ctx.font="14px Arial";ctx.fillText("GROUP TABLE",746,174);
+  ctx.fillStyle="#47765d";
+  ctx.font="14px Arial";
+  ctx.fillText("GROUP TABLE",746,174);
 
   rounded(90,485,200,75,15,"#f0d3ad","#dfbc8d");
   rounded(105,498,170,48,10,"#fff8ee",null);
   rounded(355,485,200,75,15,"#f0d3ad","#dfbc8d");
   rounded(370,498,170,48,10,"#fff8ee",null);
-  plant(865,510);plant(930,565);plant(565,555);
-  ctx.fillStyle="#64748b";ctx.font="bold 13px Arial";ctx.fillText("ENTRANCE",815,600);
 
-  Object.entries(players).forEach(([uid,p])=>{if(uid!==currentUser?.uid)drawPlayer(p,false)});
+  plant(865,510);plant(930,565);plant(565,555);
+  ctx.fillStyle="#64748b";
+  ctx.font="bold 13px Arial";
+  ctx.fillText("ENTRANCE",815,600);
+
+  Object.entries(players).forEach(([uid,p])=>{
+    if(uid!==currentUser?.uid)drawPlayer(p,false);
+  });
   if(myPlayer)drawPlayer(myPlayer,true);
 }
 function renderPlayers(){
   const entries=Object.entries(players).filter(([,p])=>p&&p.name);
   $("mapPlayerCount").textContent="参加者 "+entries.length+"人";
   $("playerCountLabel").textContent=entries.length+"人";
-  const list=$("playersList");list.replaceChildren();
+
+  const list=$("playersList");
+  list.replaceChildren();
 
   if(!entries.length){
-    const empty=document.createElement("div");empty.className="empty";empty.textContent="現在、参加者はいません。";list.appendChild(empty);
+    const empty=document.createElement("div");
+    empty.className="empty";
+    empty.textContent="現在、参加者はいません。";
+    list.appendChild(empty);
   }else{
-    entries.sort((a,b)=>a[0]===currentUser?.uid?-1:b[0]===currentUser?.uid?1:String(a[1].name).localeCompare(String(b[1].name),"ja"));
+    entries.sort((a,b)=>
+      a[0]===currentUser?.uid?-1:
+      b[0]===currentUser?.uid?1:
+      String(a[1].name).localeCompare(String(b[1].name),"ja")
+    );
+
     entries.forEach(([uid,p])=>{
-      const row=document.createElement("div");row.className="player-row";
-      const avatar=document.createElement("div");avatar.className="avatar";avatar.style.background=p.color||"#39a783";avatar.textContent=String(p.name).slice(0,1);
+      const row=document.createElement("div");
+      row.className="player-row";
+
+      const avatar=document.createElement("div");
+      avatar.className="avatar";
+      avatar.style.background=p.color||"#39a783";
+      avatar.textContent=String(p.name).slice(0,1);
+
       const info=document.createElement("div");
-      const name=document.createElement("div");name.className="player-name";name.textContent=p.name+(uid===currentUser?.uid?"（あなた）":"");
-      const zone=document.createElement("div");zone.className="player-zone";zone.textContent=zoneById(p.zone).name;
-      info.append(name,zone);row.append(avatar,info);list.appendChild(row);
+      const name=document.createElement("div");
+      name.className="player-name";
+      name.textContent=p.name+(uid===currentUser?.uid?"（あなた）":"");
+
+      const zone=document.createElement("div");
+      zone.className="player-zone";
+      zone.textContent=zoneById(p.zone).name;
+
+      info.append(name,zone);
+      row.append(avatar,info);
+      list.appendChild(row);
     });
   }
   drawMap();
 }
 function updateZoneUI(){
+  if(!myPlayer)return;
   $("myZone").textContent=zoneById(myPlayer.zone).name;
-  document.querySelectorAll("[data-zone]").forEach(b=>b.classList.toggle("active",b.dataset.zone===myPlayer?.zone));
+  document.querySelectorAll("[data-zone]").forEach(b=>{
+    b.classList.toggle("active",b.dataset.zone===myPlayer.zone);
+  });
 }
 function writePosition(force=false){
   if(!joined||!playerRef||!myPlayer)return;
+
   const now=Date.now();
   if(!force&&now-lastWrite<120){
-    pendingWrite=true;
     clearTimeout(moveTimer);
-    moveTimer=setTimeout(()=>{pendingWrite=false;writePosition(true)},130);
+    moveTimer=setTimeout(()=>writePosition(true),130);
     return;
   }
+
   lastWrite=now;
-  const z=zoneAt(myPlayer.x,myPlayer.y);
-  myPlayer.zone=z.id;
+  myPlayer.zone=zoneAt(myPlayer.x,myPlayer.y).id;
+
   playerRef.update({
-    name:myPlayer.name,x:Math.round(myPlayer.x),y:Math.round(myPlayer.y),
-    zone:myPlayer.zone,color:myPlayer.color,
+    name:myPlayer.name,
+    x:Math.round(myPlayer.x),
+    y:Math.round(myPlayer.y),
+    zone:myPlayer.zone,
+    color:myPlayer.color,
     updatedAt:firebase.database.ServerValue.TIMESTAMP
   }).catch(err=>showFirebaseError(err,"位置の同期"));
 }
 function move(dx,dy){
   if(!joined||!myPlayer)return;
+
   const p=clamp(myPlayer.x+dx,myPlayer.y+dy);
-  myPlayer.x=p.x;myPlayer.y=p.y;myPlayer.zone=zoneAt(p.x,p.y).id;
-  updateZoneUI();drawMap();writePosition();
+  myPlayer.x=p.x;
+  myPlayer.y=p.y;
+  myPlayer.zone=zoneAt(p.x,p.y).id;
+
+  updateZoneUI();
+  drawMap();
+  writePosition();
 }
 function moveToZone(id){
   if(!joined||!myPlayer)return;
-  const pos={quiet:{x:250,y:245},group:{x:800,y:285},break:{x:650,y:520}}[id];
+
+  const pos={
+    quiet:{x:250,y:245},
+    group:{x:800,y:285},
+    break:{x:650,y:520}
+  }[id];
+
   if(!pos)return;
-  myPlayer.x=pos.x;myPlayer.y=pos.y;myPlayer.zone=id;
-  updateZoneUI();drawMap();writePosition(true);
+  myPlayer.x=pos.x;
+  myPlayer.y=pos.y;
+  myPlayer.zone=id;
+
+  updateZoneUI();
+  drawMap();
+  writePosition(true);
 }
 function showFirebaseError(err,operation="Firebase"){
   console.error(operation,err);
+
   const code=err?.code||"";
   const raw=err?.message||String(err);
   let explanation=raw;
 
   if(code==="auth/api-key-not-valid"||raw.includes("api-key-not-valid")){
-    explanation="APIキーが無効です。Firebase Consoleのプロジェクト設定から、reservelink-efb43のウェブアプリ設定を再確認してください。";
+    explanation="APIキーが無効です。Firebase Consoleでプロジェクトreservelink-efb43のウェブアプリ設定を確認してください。";
   }else if(code==="auth/operation-not-allowed"){
     explanation="匿名ログインが無効です。Firebase Authenticationのログイン方法で「匿名」を有効にしてください。";
   }else if(code==="PERMISSION_DENIED"||raw.includes("PERMISSION_DENIED")||raw.includes("permission_denied")){
-    explanation="Realtime Databaseのアクセスルールで拒否されました。下記のルールを設定してください。";
+    explanation="Realtime Databaseのアクセスルールで拒否されました。rooms/main/playersへの読み書き権限を確認してください。";
   }else if(code==="auth/network-request-failed"){
     explanation="ネットワーク接続に失敗しました。インターネット接続や通信制限を確認してください。";
   }else if(code==="auth/unauthorized-domain"){
     explanation="このページのドメインが未許可です。Firebase Authenticationの承認済みドメインを確認してください。";
+  }else if(code==="STUDYROOM_TIMEOUT"){
+    explanation=raw;
   }
-  setMessage(operation+"に失敗しました。\n"+explanation+"\nエラーコード："+(code||"不明"),"error");
+
+  setMessage(
+    operation+"に失敗しました。\n"+
+    explanation+"\n"+
+    "エラーコード："+(code||"不明"),
+    "error"
+  );
   setConnection(false,"エラー");
 }
-async function joinRoom(){
-  const name=$("displayName").value.trim();
-  if(!name){setMessage("表示名を入力してください。","error");$("displayName").focus();return}
-  if(name.length>16){setMessage("表示名は16文字以内にしてください。","error");return}
-  if(!auth||!db){setMessage("Firebase SDKを初期化できません。ページを再読み込みし、通信環境を確認してください。","error");return}
 
+/* 入室処理 */
+async function joinRoom(){
+  if(entering||joined)return;
+
+  const name=$("displayName").value.trim();
+  if(!name){
+    setMessage("表示名を入力してください。","error");
+    $("displayName").focus();
+    return;
+  }
+  if(name.length>16){
+    setMessage("表示名は16文字以内にしてください。","error");
+    return;
+  }
+
+  /* クリック直後に画面を更新する */
+  entering=true;
   $("joinButton").disabled=true;
-  setMessage("Firebase認証を確認しています。");
+  $("joinButton").textContent="入室処理中…";
+  setMessage("入室処理を開始しています。");
+  setConnection(false,"接続確認中");
+
   try{
-    if(!auth.currentUser)await auth.signInAnonymously();
+    if(typeof firebase==="undefined"){
+      throw new Error("Firebase SDKを読み込めませんでした。インターネット接続を確認してページを再読み込みしてください。");
+    }
+    if(!auth||!db){
+      throw new Error("Firebaseが初期化されていません。画面を再読み込みしてください。");
+    }
+
+    if(!auth.currentUser){
+      setMessage("1/4 匿名ログインを実行しています…");
+      await withTimeout(auth.signInAnonymously(),15000,"匿名ログイン");
+    }
+
     currentUser=auth.currentUser;
-    if(!currentUser)throw new Error("認証ユーザーを取得できませんでした。");
+    if(!currentUser){
+      throw new Error("ログイン後のユーザー情報を取得できませんでした。");
+    }
 
     playerRef=db.ref(ROOM_PATH+"/"+currentUser.uid);
     playersRef=db.ref(ROOM_PATH);
 
-    setMessage("参加者データを確認しています。");
-    const snap=await playerRef.once("value");
+    setMessage("2/4 自分の参加者データを確認しています…");
+    const snap=await withTimeout(playerRef.once("value"),12000,"参加者データの読み込み");
     const old=snap.val();
+
     myPlayer={
       name:name,
       x:old&&Number.isFinite(old.x)?old.x:120+Math.random()*330,
@@ -373,98 +508,197 @@ async function joinRoom(){
       zone:old?.zone||"quiet",
       color:old?.color||COLORS[colorIndex++%COLORS.length]
     };
+
     const p=clamp(myPlayer.x,myPlayer.y);
-    myPlayer.x=p.x;myPlayer.y=p.y;myPlayer.zone=zoneAt(p.x,p.y).id;
+    myPlayer.x=p.x;
+    myPlayer.y=p.y;
+    myPlayer.zone=zoneAt(p.x,p.y).id;
 
-    await playerRef.onDisconnect().remove();
-    await playerRef.set({
-      ...myPlayer,
-      joinedAt:firebase.database.ServerValue.TIMESTAMP,
-      updatedAt:firebase.database.ServerValue.TIMESTAMP
-    });
+    setMessage("3/4 自分の参加者データを登録しています…");
+    await withTimeout(
+      playerRef.set({
+        ...myPlayer,
+        joinedAt:firebase.database.ServerValue.TIMESTAMP,
+        updatedAt:firebase.database.ServerValue.TIMESTAMP
+      }),
+      12000,
+      "参加者データの登録"
+    );
 
+    /* Firebaseへの登録が成功してから画面を切り替える */
     joined=true;
     $("loginScreen").style.display="none";
     $("app").style.display="block";
     $("leaveButton").hidden=false;
     $("myName").textContent=name;
+
     updateZoneUI();
     setConnection(true,"接続中");
     setMessage("入室しました。","success");
 
+    setMessage("4/4 参加者一覧を接続しています…");
     playersRef.on("value",s=>{
       players=s.val()||{};
       renderPlayers();
-    },err=>showFirebaseError(err,"参加者一覧の読み込み"));
+      if(joined)setConnection(true,"接続中");
+    },err=>{
+      showFirebaseError(err,"参加者一覧の読み込み");
+    });
 
     db.ref(".info/connected").on("value",s=>{
       const online=s.val()===true;
       setConnection(online,online?"接続中":"再接続中");
-      if(online&&joined&&playerRef)playerRef.onDisconnect().remove().catch(console.error);
     });
+
+    setMessage("入室しました。マップをクリックするか、矢印キーで移動できます。","success");
   }catch(err){
     showFirebaseError(err,"入室");
+    joined=false;
+
+    /* 入室途中で失敗した場合は画面を戻す */
+    $("app").style.display="none";
+    $("loginScreen").style.display="block";
+    $("leaveButton").hidden=true;
+
+    if(playersRef){
+      playersRef.off();
+      playersRef=null;
+    }
+    if(db)db.ref(".info/connected").off();
+
+    /* 途中まで作成された参加者データを可能な範囲で整理する */
+    if(playerRef){
+      try{await playerRef.remove()}catch(cleanupError){
+        console.warn("参加者データの整理に失敗しました",cleanupError);
+      }
+    }
+
+    playerRef=null;
+    currentUser=auth?.currentUser||null;
+    myPlayer=null;
+    players={};
   }finally{
+    entering=false;
     $("joinButton").disabled=false;
+    $("joinButton").textContent="自習室に入室";
   }
 }
+
 async function leaveRoom(){
   joined=false;
-  if(playersRef){playersRef.off();playersRef=null}
+
+  if(playersRef){
+    playersRef.off();
+    playersRef=null;
+  }
   if(db)db.ref(".info/connected").off();
   clearTimeout(moveTimer);
+
   try{
-    if(playerRef){await playerRef.onDisconnect().cancel();await playerRef.remove()}
-  }catch(err){console.warn("退出時の処理",err)}
-  playerRef=null;myPlayer=null;players={};
+    if(playerRef){
+      await playerRef.onDisconnect().cancel();
+      await playerRef.remove();
+    }
+  }catch(err){
+    console.warn("退出時の処理",err);
+  }
+
+  playerRef=null;
+  myPlayer=null;
+  players={};
+
   $("app").style.display="none";
   $("loginScreen").style.display="block";
   $("leaveButton").hidden=true;
+
   setConnection(false,"未接続");
   setMessage("退出しました。再び入室できます。");
   renderPlayers();
 }
+
+/* 操作イベント */
 $("joinButton").addEventListener("click",joinRoom);
-$("displayName").addEventListener("keydown",e=>{if(e.key==="Enter")joinRoom()});
+$("displayName").addEventListener("keydown",e=>{
+  if(e.key==="Enter")joinRoom();
+});
 $("leaveButton").addEventListener("click",leaveRoom);
+
 document.querySelectorAll("[data-move]").forEach(b=>{
   b.addEventListener("click",()=>{
-    const d={up:[0,-25],down:[0,25],left:[-25,0],right:[25,0]}[b.dataset.move];
+    const d={
+      up:[0,-25],
+      down:[0,25],
+      left:[-25,0],
+      right:[25,0]
+    }[b.dataset.move];
     move(d[0],d[1]);
   });
 });
-document.querySelectorAll("[data-zone]").forEach(b=>b.addEventListener("click",()=>moveToZone(b.dataset.zone)));
+
+document.querySelectorAll("[data-zone]").forEach(b=>{
+  b.addEventListener("click",()=>moveToZone(b.dataset.zone));
+});
+
 document.addEventListener("keydown",e=>{
   if(!joined||["INPUT","TEXTAREA"].includes(document.activeElement?.tagName))return;
+
   const keys={
     ArrowUp:[0,-20],w:[0,-20],W:[0,-20],
     ArrowDown:[0,20],s:[0,20],S:[0,20],
     ArrowLeft:[-20,0],a:[-20,0],A:[-20,0],
     ArrowRight:[20,0],d:[20,0],D:[20,0]
   };
-  if(keys[e.key]){e.preventDefault();move(...keys[e.key])}
-});
-canvas.addEventListener("pointerdown",e=>{
-  if(!joined||!myPlayer)return;
-  const rect=canvas.getBoundingClientRect();
-  const p=clamp((e.clientX-rect.left)/rect.width*MAP_W,(e.clientY-rect.top)/rect.height*MAP_H);
-  myPlayer.x=p.x;myPlayer.y=p.y;myPlayer.zone=zoneAt(p.x,p.y).id;
-  updateZoneUI();drawMap();writePosition(true);
+
+  if(keys[e.key]){
+    e.preventDefault();
+    move(...keys[e.key]);
+  }
 });
 
-/* 起動時にFirebaseの初期化エラーを表示する */
+canvas.addEventListener("pointerdown",e=>{
+  if(!joined||!myPlayer)return;
+
+  const rect=canvas.getBoundingClientRect();
+  const p=clamp(
+    (e.clientX-rect.left)/rect.width*MAP_W,
+    (e.clientY-rect.top)/rect.height*MAP_H
+  );
+
+  myPlayer.x=p.x;
+  myPlayer.y=p.y;
+  myPlayer.zone=zoneAt(p.x,p.y).id;
+
+  updateZoneUI();
+  drawMap();
+  writePosition(true);
+});
+
+/* 起動時のFirebase初期化 */
 try{
-  if(!firebaseConfig.apiKey||!firebaseConfig.projectId)throw new Error("Firebase設定が不足しています。");
-  if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);
+  if(typeof firebase==="undefined"){
+    throw new Error("Firebase SDKを読み込めませんでした。ネットワーク接続を確認してください。");
+  }
+  if(!firebaseConfig.apiKey||!firebaseConfig.projectId){
+    throw new Error("Firebase設定が不足しています。");
+  }
+  if(!firebase.apps.length){
+    firebase.initializeApp(firebaseConfig);
+  }
+
   auth=firebase.auth();
   db=firebase.database();
-  setMessage("Firebase設定を読み込みました。入室できます。");
+
+  setMessage("Firebase SDKの初期化が完了しました。表示名を入力して入室してください。");
 }catch(err){
-  console.error(err);
-  setMessage("Firebaseの初期化に失敗しました。\n"+(err.message||String(err)),"error");
+  console.error("初期化エラー",err);
+  setMessage(
+    "Firebaseの初期化に失敗しました。\n"+
+    (err.message||String(err)),
+    "error"
+  );
 }
+
 drawMap();
 </script>
 </body>
 </html>
-```
