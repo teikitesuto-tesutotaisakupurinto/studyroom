@@ -1,9 +1,9 @@
-```html
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>StudyRoom</title>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
@@ -11,352 +11,150 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
 
 <style>
-:root {
-  --blue: #4778d5;
-  --blue-light: #edf3ff;
-  --text: #26344a;
-  --muted: #778398;
-  --border: #e2e8f0;
-  --bg: #f4f7fb;
-}
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  font-family: Arial, "Noto Sans JP", sans-serif;
-  color: var(--text);
-  background: var(--bg);
-}
-button, input { font: inherit; }
-button { cursor: pointer; }
-header {
-  height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 22px;
-  background: white;
-  border-bottom: 1px solid var(--border);
-}
-.brand {
-  font-size: 21px;
-  font-weight: 800;
-  color: var(--blue);
-}
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 13px;
-}
-.status-dot {
-  width: 9px;
-  height: 9px;
-  display: inline-block;
-  border-radius: 50%;
-  background: #b5bdc9;
-  margin-right: 5px;
-}
-.status-dot.online { background: #27ae79; }
-button.primary {
-  border: 0;
-  background: var(--blue);
-  color: white;
-  border-radius: 9px;
-  padding: 11px 17px;
-  font-weight: 700;
-}
-button.secondary {
-  background: white;
-  color: var(--text);
-  border: 1px solid var(--border);
-  border-radius: 9px;
-  padding: 10px 14px;
-}
-button:disabled { opacity: .55; cursor: not-allowed; }
-main { max-width: 1440px; margin: 0 auto; padding: 22px; }
-.welcome {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 16px;
-  margin-bottom: 18px;
-}
-h1 { font-size: 25px; margin: 0 0 7px; }
-.subtitle { color: var(--muted); font-size: 14px; }
-.layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 290px;
-  gap: 18px;
-  align-items: start;
-}
-.map-card, .panel {
-  background: white;
-  border: 1px solid var(--border);
-  border-radius: 15px;
-  overflow: hidden;
-}
-.map-toolbar {
-  padding: 14px 17px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid var(--border);
-  gap: 10px;
-}
-.map-toolbar strong { font-size: 14px; }
-.map-toolbar span { color: var(--muted); font-size: 12px; }
-.map-wrap {
-  position: relative;
-  background: #f7f9fc;
-}
-canvas {
-  display: block;
-  width: 100%;
-  height: auto;
-  touch-action: none;
-  cursor: crosshair;
-}
-.map-legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  padding: 12px 17px;
-  border-top: 1px solid var(--border);
-  font-size: 12px;
-  color: var(--muted);
-}
-.legend-item { display: flex; align-items: center; gap: 6px; }
-.legend-dot { width: 10px; height: 10px; border-radius: 50%; }
-.panel { margin-bottom: 15px; }
-.panel-title {
-  padding: 15px 16px;
-  border-bottom: 1px solid var(--border);
-  font-size: 14px;
-  font-weight: 800;
-}
-.panel-body { padding: 15px 16px; }
-.field-label {
-  display: block;
-  font-size: 12px;
-  color: var(--muted);
-  margin-bottom: 7px;
-}
-input {
-  width: 100%;
-  border: 1px solid #d8e0ec;
-  border-radius: 9px;
-  padding: 11px;
-  outline: none;
-}
-input:focus { border-color: var(--blue); }
-.full { width: 100%; margin-top: 10px; }
-.small-note {
-  font-size: 12px;
-  color: var(--muted);
-  line-height: 1.7;
-  margin-top: 11px;
-}
-#message {
-  font-size: 12px;
-  line-height: 1.7;
-  color: var(--muted);
-  overflow-wrap: anywhere;
-}
-#message.error { color: #c0392b; }
-#message.success { color: #16835e; }
-.player-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 0;
-  border-bottom: 1px solid #f0f2f6;
-}
-.player-row:last-child { border-bottom: 0; }
-.player-avatar {
-  width: 33px;
-  height: 33px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 12px;
-  font-weight: 800;
-  flex-shrink: 0;
-}
-.player-name { font-size: 13px; font-weight: 700; }
-.player-zone { font-size: 11px; color: var(--muted); margin-top: 3px; }
-.empty { color: var(--muted); font-size: 13px; line-height: 1.7; }
-.zone-button {
-  width: 100%;
-  text-align: left;
-  background: white;
-  border: 1px solid var(--border);
-  border-radius: 9px;
-  padding: 11px;
-  margin-bottom: 8px;
-}
-.zone-button:last-child { margin-bottom: 0; }
-.zone-button strong { display: block; font-size: 13px; }
-.zone-button span { display: block; color: var(--muted); font-size: 11px; margin-top: 4px; }
-.zone-button.active { border-color: var(--blue); background: var(--blue-light); }
-.controls {
-  display: grid;
-  grid-template-columns: repeat(3, 43px);
-  gap: 5px;
-  justify-content: center;
-  margin-top: 13px;
-}
-.controls button {
-  height: 38px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: white;
-  font-weight: 700;
-}
-.controls .blank { visibility: hidden; }
-.footer {
-  text-align: center;
-  color: #929cad;
-  font-size: 11px;
-  padding: 24px 10px;
-}
-#app { display: none; }
-@media(max-width: 900px) {
-  .layout { grid-template-columns: 1fr; }
-  .sidebar { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-  .panel { margin-bottom: 0; }
-  .panel.players-panel { grid-column: 1 / -1; }
-}
-@media(max-width: 560px) {
-  header { padding: 0 14px; }
-  main { padding: 13px; }
-  .welcome { align-items: flex-start; flex-direction: column; }
-  h1 { font-size: 22px; }
-  .header-right { gap: 7px; font-size: 11px; }
-  .sidebar { display: flex; flex-direction: column; }
-  .panel { width: 100%; }
-}
+*{box-sizing:border-box}
+:root{--blue:#4778d5;--text:#26344a;--border:#e2e8f0;--muted:#748197}
+body{margin:0;background:#f4f7fb;color:var(--text);font-family:Arial,"Noto Sans JP",sans-serif}
+button,input{font:inherit}
+button{cursor:pointer}
+header{height:62px;background:white;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 20px}
+.brand{font-size:21px;font-weight:800;color:var(--blue)}
+.header-right{display:flex;align-items:center;gap:12px;font-size:12px}
+.dot{display:inline-block;width:9px;height:9px;background:#aab3c1;border-radius:50%;margin-right:5px}
+.dot.online{background:#28a879}
+main{max-width:1400px;margin:auto;padding:20px}
+h1{font-size:25px;margin:0 0 8px}
+.subtitle{font-size:13px;color:var(--muted);line-height:1.7}
+.card{background:white;border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.card-title{padding:14px 16px;font-weight:800;font-size:14px;border-bottom:1px solid var(--border)}
+.card-body{padding:15px}
+button.primary{background:var(--blue);color:white;border:0;border-radius:9px;padding:11px 16px;font-weight:700}
+button.secondary{background:white;border:1px solid var(--border);border-radius:9px;padding:9px 13px;color:var(--text)}
+button:disabled{opacity:.6;cursor:wait}
+#loginScreen{max-width:520px;margin:55px auto;padding:15px}
+label{display:block;font-size:12px;color:var(--muted);margin:15px 0 7px}
+input{width:100%;padding:12px;border:1px solid #d7dfeb;border-radius:9px}
+.full{width:100%;margin-top:12px}
+#message{font-size:12px;line-height:1.8;color:var(--muted);overflow-wrap:anywhere;margin-top:12px;white-space:pre-wrap}
+#message.error{color:#bd3434}
+#message.success{color:#16815a}
+#app{display:none}
+.welcome{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 285px;gap:17px;align-items:start}
+.map-toolbar{display:flex;justify-content:space-between;gap:10px;padding:13px 16px;border-bottom:1px solid var(--border);font-size:13px}
+.map-toolbar span{color:var(--muted);font-size:12px}
+canvas{width:100%;height:auto;display:block;touch-action:manipulation}
+.legend{display:flex;gap:14px;flex-wrap:wrap;padding:12px 16px;border-top:1px solid var(--border);font-size:12px;color:var(--muted)}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
+.sidebar .card{margin-bottom:14px}
+.field-label{font-size:12px;color:var(--muted);margin-bottom:6px}
+.zone-button{width:100%;text-align:left;border:1px solid var(--border);background:white;border-radius:9px;padding:11px;margin-bottom:8px}
+.zone-button:last-child{margin-bottom:0}
+.zone-button strong{display:block;font-size:13px}
+.zone-button span{display:block;color:var(--muted);font-size:11px;margin-top:5px}
+.zone-button.active{background:#edf3ff;border-color:var(--blue)}
+.controls{display:grid;grid-template-columns:repeat(3,42px);gap:5px;justify-content:center;margin-top:15px}
+.controls button{height:37px;border:1px solid var(--border);background:white;border-radius:8px}
+.controls .blank{visibility:hidden}
+.player-row{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid #eef1f5}
+.player-row:last-child{border:0}
+.avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:12px;font-weight:bold;flex-shrink:0}
+.player-name{font-size:13px;font-weight:700}
+.player-zone{font-size:11px;color:var(--muted);margin-top:4px}
+.empty{font-size:12px;color:var(--muted);line-height:1.8}
+.footer{text-align:center;padding:25px;color:#929cad;font-size:11px}
+@media(max-width:850px){.layout{grid-template-columns:1fr}.sidebar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.sidebar .card{margin:0}.players-card{grid-column:1/-1}}
+@media(max-width:520px){header{padding:0 12px}main{padding:12px}h1{font-size:21px}.welcome{align-items:flex-start;flex-direction:column}.sidebar{display:flex;flex-direction:column}.sidebar .card{width:100%}#loginScreen{margin:25px auto}}
 </style>
 </head>
-
 <body>
+
 <header>
   <div class="brand">StudyRoom</div>
   <div class="header-right">
-    <span><i id="statusDot" class="status-dot"></i><span id="connectionText">未接続</span></span>
-    <button id="leaveButton" class="secondary" style="display:none">退出</button>
+    <span><i id="statusDot" class="dot"></i><span id="connectionText">未接続</span></span>
+    <button id="leaveButton" class="secondary" hidden>退出</button>
   </div>
 </header>
 
 <section id="loginScreen">
-  <main style="max-width:520px;padding-top:60px">
-    <div class="panel">
-      <div class="panel-title">オンライン自習室に参加</div>
-      <div class="panel-body">
-        <h1 style="font-size:23px;margin-bottom:10px">StudyRoom</h1>
-        <p class="subtitle" style="line-height:1.8;margin-bottom:22px">
-          アバターを動かして、オンラインの学習スペースで一緒に勉強できます。
-        </p>
-        <label class="field-label" for="displayName">表示名</label>
-        <input id="displayName" maxlength="16" placeholder="例：StudyUser">
-        <button id="joinButton" class="primary full">自習室に入室</button>
-        <div id="message" style="margin-top:13px" aria-live="polite">
-          表示名を入力して入室してください。
-        </div>
-        <div class="small-note">
-          入室すると、表示名とアバターの位置がほかの参加者に表示されます。
-        </div>
-      </div>
+  <div class="card">
+    <div class="card-title">オンライン自習室</div>
+    <div class="card-body">
+      <h1>StudyRoom</h1>
+      <p class="subtitle">表示名を設定して、自習室に入室してください。</p>
+      <label for="displayName">表示名（16文字以内）</label>
+      <input id="displayName" maxlength="16" autocomplete="nickname" placeholder="例：StudyUser">
+      <button id="joinButton" class="primary full">自習室に入室</button>
+      <div id="message" role="status">Firebase接続設定を確認しています。</div>
+      <p class="subtitle">入室すると、表示名とアバターの位置がほかの参加者に表示されます。</p>
     </div>
-  </main>
+  </div>
 </section>
 
-<div id="app">
-  <main>
-    <div class="welcome">
-      <div>
-        <h1>オンライン自習室</h1>
-        <div class="subtitle">マップをクリックして移動。ほかの参加者の位置もリアルタイムで表示されます。</div>
-      </div>
-      <div class="subtitle">ルーム：メイン自習室</div>
+<section id="app">
+<main>
+  <div class="welcome">
+    <div>
+      <h1>オンライン自習室</h1>
+      <div class="subtitle">マップをクリックすると移動できます。位置はリアルタイムで同期されます。</div>
     </div>
+    <div class="subtitle">メイン自習室</div>
+  </div>
 
-    <div class="layout">
-      <section class="map-card">
-        <div class="map-toolbar">
-          <strong>自習室マップ</strong>
-          <span id="mapPlayerCount">参加者 0人</span>
-        </div>
-        <div class="map-wrap">
-          <canvas id="mapCanvas" width="1000" height="650" aria-label="自習室マップ"></canvas>
-        </div>
-        <div class="map-legend">
-          <div class="legend-item"><i class="legend-dot" style="background:#4778d5"></i>あなた</div>
-          <div class="legend-item"><i class="legend-dot" style="background:#39a783"></i>ほかの参加者</div>
-          <div class="legend-item">マップをクリックして移動</div>
+  <div class="layout">
+    <section class="card">
+      <div class="map-toolbar">
+        <strong>自習室マップ</strong>
+        <span id="mapPlayerCount">参加者 0人</span>
+      </div>
+      <canvas id="mapCanvas" width="1000" height="650" aria-label="自習室マップ"></canvas>
+      <div class="legend">
+        <span><i style="background:#4778d5"></i>あなた</span>
+        <span><i style="background:#39a783"></i>ほかの参加者</span>
+        <span>マップをクリックして移動</span>
+      </div>
+    </section>
+
+    <aside class="sidebar">
+      <section class="card">
+        <div class="card-title">あなたの情報</div>
+        <div class="card-body">
+          <div class="field-label">表示名</div>
+          <div id="myName" style="font-weight:800;margin-bottom:15px">-</div>
+          <div class="field-label">現在のエリア</div>
+          <div id="myZone" style="font-size:14px;font-weight:700">静かな自習エリア</div>
+          <div class="controls">
+            <button class="blank" tabindex="-1"> </button><button data-move="up">↑</button><button class="blank" tabindex="-1"> </button>
+            <button data-move="left">←</button><button data-move="down">↓</button><button data-move="right">→</button>
+          </div>
+          <p class="subtitle">矢印キーまたは WASD でも移動できます。</p>
         </div>
       </section>
 
-      <aside class="sidebar">
-        <section class="panel">
-          <div class="panel-title">あなたの情報</div>
-          <div class="panel-body">
-            <div class="field-label">表示名</div>
-            <div id="myName" style="font-size:16px;font-weight:800;margin-bottom:13px">-</div>
-            <div class="field-label">現在のエリア</div>
-            <div id="myZone" style="font-size:14px;font-weight:700">静かな自習エリア</div>
-            <div class="controls" aria-label="移動操作">
-              <button class="blank" tabindex="-1"> </button>
-              <button data-move="up" aria-label="上に移動">↑</button>
-              <button class="blank" tabindex="-1"> </button>
-              <button data-move="left" aria-label="左に移動">←</button>
-              <button data-move="down" aria-label="下に移動">↓</button>
-              <button data-move="right" aria-label="右に移動">→</button>
-            </div>
-            <div class="small-note">キーボードの矢印キーまたは WASD でも移動できます。</div>
-          </div>
-        </section>
+      <section class="card">
+        <div class="card-title">学習エリア</div>
+        <div class="card-body">
+          <button class="zone-button active" data-zone="quiet"><strong>静かな自習エリア</strong><span>集中して勉強する場所</span></button>
+          <button class="zone-button" data-zone="group"><strong>グループ学習エリア</strong><span>一緒に学習する場所</span></button>
+          <button class="zone-button" data-zone="break"><strong>休憩エリア</strong><span>休憩する場所</span></button>
+        </div>
+      </section>
 
-        <section class="panel">
-          <div class="panel-title">学習エリア</div>
-          <div class="panel-body">
-            <button class="zone-button active" data-zone="quiet">
-              <strong>静かな自習エリア</strong>
-              <span>集中して勉強する場所</span>
-            </button>
-            <button class="zone-button" data-zone="group">
-              <strong>グループ学習エリア</strong>
-              <span>一緒に学習する場所</span>
-            </button>
-            <button class="zone-button" data-zone="break">
-              <strong>休憩エリア</strong>
-              <span>少し休憩する場所</span>
-            </button>
-          </div>
-        </section>
-
-        <section class="panel players-panel">
-          <div class="panel-title">参加者一覧 <span id="playerCountLabel" style="color:#778398;font-weight:400">0人</span></div>
-          <div class="panel-body" id="playersList">
-            <div class="empty">参加者を読み込んでいます。</div>
-          </div>
-        </section>
-      </aside>
-    </div>
-  </main>
-</div>
+      <section class="card players-card">
+        <div class="card-title">参加者一覧 <span id="playerCountLabel" style="color:#748197;font-weight:400">0人</span></div>
+        <div class="card-body" id="playersList"><div class="empty">入室すると参加者が表示されます。</div></div>
+      </section>
+    </aside>
+  </div>
+</main>
+</section>
 
 <div class="footer">StudyRoom</div>
 
 <script>
-/* Firebase 設定 */
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+"use strict";
 
-// Your web app's Firebase configuration
+/* Firebase Consoleのウェブアプリ設定を正確に反映 */
 const firebaseConfig = {
   apiKey: "AIzaSyAXliKkcuGSFUvYmfxMfiY6SgYWdos2RKg",
   authDomain: "reservelink-efb43.firebaseapp.com",
@@ -367,540 +165,304 @@ const firebaseConfig = {
   appId: "1:134662112302:web:9cf6ceb06c2eadb44e0bbf"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+const ROOM_PATH = "rooms/main/players";
+const MAP_W = 1000;
+const MAP_H = 650;
+const COLORS = ["#4778d5","#39a783","#d58b45","#9268cc","#d56d7b","#438c9e"];
 
-firebase.initializeApp(firebaseConfig);
-
-const auth = firebase.auth();
-const db = firebase.database();
-
-const loginScreen = document.getElementById("loginScreen");
-const appScreen = document.getElementById("app");
-const joinButton = document.getElementById("joinButton");
-const leaveButton = document.getElementById("leaveButton");
-const nameInput = document.getElementById("displayName");
-const message = document.getElementById("message");
-const canvas = document.getElementById("mapCanvas");
+const $ = id => document.getElementById(id);
+const canvas = $("mapCanvas");
 const ctx = canvas.getContext("2d");
 
-const ROOM_PATH = "rooms/main/players";
-const PLAYER_COLORS = [
-  "#4778d5", "#39a783", "#d58b45",
-  "#9268cc", "#d56d7b", "#438c9e"
-];
-
+let auth = null;
+let db = null;
 let currentUser = null;
 let playerRef = null;
 let playersRef = null;
 let players = {};
 let myPlayer = null;
 let joined = false;
+let writing = false;
+let pendingWrite = false;
+let lastWrite = 0;
 let moveTimer = null;
-let lastWriteAt = 0;
-let pendingPosition = null;
-let myColor = PLAYER_COLORS[0];
-
-const MAP_W = 1000;
-const MAP_H = 650;
+let colorIndex = 0;
 
 const zones = [
-  { id:"quiet", name:"静かな自習エリア", x:35, y:35, w:565, h:365, color:"#e9f1ff" },
-  { id:"group", name:"グループ学習エリア", x:625, y:35, w:340, h:365, color:"#e5f6ed" },
-  { id:"break", name:"休憩エリア", x:35, y:430, w:930, h:185, color:"#fff2df" }
+  {id:"quiet",name:"静かな自習エリア",x:35,y:35,w:565,h:365,color:"#e9f1ff"},
+  {id:"group",name:"グループ学習エリア",x:625,y:35,w:340,h:365,color:"#e5f6ed"},
+  {id:"break",name:"休憩エリア",x:35,y:430,w:930,h:185,color:"#fff2df"}
 ];
 
-function setMessage(text, type = "") {
-  message.textContent = text;
-  message.className = type;
+function setMessage(text,type=""){
+  $("message").textContent=text;
+  $("message").className=type;
 }
-
-function setConnection(connected, text) {
-  document.getElementById("statusDot").classList.toggle("online", connected);
-  document.getElementById("connectionText").textContent = text;
+function setConnection(online,text){
+  $("statusDot").classList.toggle("online",online);
+  $("connectionText").textContent=text;
 }
-
-function safeText(value) {
-  return String(value ?? "");
+function zoneAt(x,y){
+  return zones.find(z=>x>=z.x&&x<=z.x+z.w&&y>=z.y&&y<=z.y+z.h)||zones[0];
 }
-
-function zoneAt(x, y) {
-  for (const zone of zones) {
-    if (x >= zone.x && x <= zone.x + zone.w &&
-        y >= zone.y && y <= zone.y + zone.h) {
-      return zone;
-    }
-  }
-  return zones[0];
+function zoneById(id){return zones.find(z=>z.id===id)||zones[0]}
+function clamp(x,y){
+  return {x:Math.max(25,Math.min(MAP_W-25,x)),y:Math.max(25,Math.min(MAP_H-25,y))};
 }
-
-function getZoneById(id) {
-  return zones.find(z => z.id === id) || zones[0];
+function rounded(x,y,w,h,r,fill,stroke){
+  ctx.beginPath();ctx.roundRect(x,y,w,h,r);
+  if(fill){ctx.fillStyle=fill;ctx.fill()}
+  if(stroke){ctx.strokeStyle=stroke;ctx.stroke()}
 }
-
-function clampPosition(x, y) {
-  return {
-    x: Math.max(25, Math.min(MAP_W - 25, x)),
-    y: Math.max(25, Math.min(MAP_H - 25, y))
-  };
+function desk(x,y,w=72,h=35){
+  rounded(x,y,w,h,5,"#d8c3a1","#c7af8b");
+  rounded(x+7,y+6,w-14,h-12,3,"#f3e5cf",null);
 }
-
-function roundedRect(x, y, w, h, r, fill, stroke) {
-  ctx.beginPath();
-  ctx.roundRect(x, y, w, h, r);
-  if (fill) {
-    ctx.fillStyle = fill;
-    ctx.fill();
-  }
-  if (stroke) {
-    ctx.strokeStyle = stroke;
-    ctx.stroke();
-  }
+function plant(x,y){
+  ctx.fillStyle="#b7d9a7";ctx.beginPath();ctx.arc(x,y,15,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle="#5c9b68";
+  [[-5,-3],[5,-5],[2,5]].forEach(([dx,dy])=>{ctx.beginPath();ctx.arc(x+dx,y+dy,6,0,Math.PI*2);ctx.fill()});
 }
-
-function drawDesk(x, y, w = 72, h = 35) {
-  roundedRect(x, y, w, h, 5, "#d8c3a1", "#c7af8b");
-  roundedRect(x + 7, y + 6, w - 14, h - 12, 3, "#f3e5cf", null);
-  ctx.fillStyle = "#a9b4c4";
-  ctx.fillRect(x + w / 2 - 12, y + h + 3, 24, 5);
+function drawPlayer(p,isMe){
+  if(!p)return;
+  const x=Number(p.x)||100,y=Number(p.y)||100;
+  const name=String(p.name||"U");
+  ctx.fillStyle="rgba(30,45,65,.12)";
+  ctx.beginPath();ctx.ellipse(x,y+13,17,6,0,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.fillStyle=p.color||"#39a783";ctx.arc(x,y,15,0,Math.PI*2);ctx.fill();
+  ctx.lineWidth=isMe?4:2;ctx.strokeStyle="#fff";ctx.stroke();
+  ctx.fillStyle="#fff";ctx.font="bold 12px Arial";ctx.textAlign="center";ctx.textBaseline="middle";
+  ctx.fillText(name.slice(0,1).toUpperCase(),x,y+1);
+  ctx.textBaseline="alphabetic";
+  const label=name.length>12?name.slice(0,12)+"…":name;
+  ctx.font="bold 13px Arial";
+  const width=ctx.measureText(label).width+16;
+  rounded(x-width/2,y+21,width,23,7,"#fff","#dce3ec");
+  ctx.fillStyle="#27364a";ctx.fillText(label,x,y+37);ctx.textAlign="start";
 }
+function drawMap(){
+  ctx.clearRect(0,0,MAP_W,MAP_H);
+  ctx.fillStyle="#f7f9fc";ctx.fillRect(0,0,MAP_W,MAP_H);
 
-function drawPlant(x, y) {
-  ctx.fillStyle = "#b7d9a7";
-  ctx.beginPath();
-  ctx.arc(x, y, 15, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.fillStyle = "#5c9b68";
-  ctx.beginPath();
-  ctx.arc(x - 5, y - 3, 6, 0, Math.PI * 2);
-  ctx.arc(x + 5, y - 5, 6, 0, Math.PI * 2);
-  ctx.arc(x + 2, y + 5, 6, 0, Math.PI * 2);
-  ctx.fill();
-}
-
-function drawMap() {
-  ctx.clearRect(0, 0, MAP_W, MAP_H);
-  ctx.fillStyle = "#f7f9fc";
-  ctx.fillRect(0, 0, MAP_W, MAP_H);
-
-  // エリア
-  for (const zone of zones) {
-    roundedRect(zone.x, zone.y, zone.w, zone.h, 18, zone.color, "#dbe3ed");
-    ctx.fillStyle = "#394b62";
-    ctx.font = "bold 20px Arial, sans-serif";
-    ctx.fillText(zone.name, zone.x + 22, zone.y + 32);
-  }
-
-  // 静かな自習エリアの机
-  [
-    [80,100],[190,100],[300,100],[410,100],
-    [80,195],[190,195],[300,195],[410,195],
-    [80,290],[190,290],[300,290],[410,290]
-  ].forEach(p => drawDesk(p[0], p[1]));
-
-  // グループ学習エリアの机
-  roundedRect(690, 120, 210, 100, 13, "#c4e6d2", "#9ccfb3");
-  roundedRect(710, 140, 170, 60, 8, "#e8f6ed", null);
-  [
-    [700,95],[790,95],[700,235],[790,235],
-    [655,165],[910,165]
-  ].forEach(p => {
-    ctx.fillStyle = "#9bb6a7";
-    ctx.beginPath();
-    ctx.arc(p[0], p[1], 12, 0, Math.PI * 2);
-    ctx.fill();
-  });
-  ctx.fillStyle = "#47765d";
-  ctx.font = "14px Arial, sans-serif";
-  ctx.fillText("GROUP TABLE", 746, 174);
-
-  // 休憩エリア
-  roundedRect(90, 485, 200, 75, 15, "#f0d3ad", "#dfbc8d");
-  roundedRect(105, 498, 170, 48, 10, "#fff8ee", null);
-  roundedRect(355, 485, 200, 75, 15, "#f0d3ad", "#dfbc8d");
-  roundedRect(370, 498, 170, 48, 10, "#fff8ee", null);
-  drawPlant(865, 510);
-  drawPlant(930, 565);
-  drawPlant(565, 555);
-
-  // 入口
-  ctx.fillStyle = "#64748b";
-  ctx.font = "bold 13px Arial, sans-serif";
-  ctx.fillText("ENTRANCE", 815, 600);
-
-  // ほかの参加者
-  Object.entries(players).forEach(([uid, player]) => {
-    if (!player || uid === currentUser?.uid) return;
-    drawPlayer(player, false);
+  zones.forEach(z=>{
+    rounded(z.x,z.y,z.w,z.h,18,z.color,"#dbe3ed");
+    ctx.fillStyle="#394b62";ctx.font="bold 20px Arial";
+    ctx.fillText(z.name,z.x+22,z.y+32);
   });
 
-  // 自分を最後に描画
-  if (myPlayer) drawPlayer(myPlayer, true);
+  [[80,100],[190,100],[300,100],[410,100],
+   [80,195],[190,195],[300,195],[410,195],
+   [80,290],[190,290],[300,290],[410,290]].forEach(p=>desk(...p));
+
+  rounded(690,120,210,100,13,"#c4e6d2","#9ccfb3");
+  rounded(710,140,170,60,8,"#e8f6ed",null);
+  [[700,95],[790,95],[700,235],[790,235],[655,165],[910,165]].forEach(([x,y])=>{
+    ctx.fillStyle="#9bb6a7";ctx.beginPath();ctx.arc(x,y,12,0,Math.PI*2);ctx.fill();
+  });
+  ctx.fillStyle="#47765d";ctx.font="14px Arial";ctx.fillText("GROUP TABLE",746,174);
+
+  rounded(90,485,200,75,15,"#f0d3ad","#dfbc8d");
+  rounded(105,498,170,48,10,"#fff8ee",null);
+  rounded(355,485,200,75,15,"#f0d3ad","#dfbc8d");
+  rounded(370,498,170,48,10,"#fff8ee",null);
+  plant(865,510);plant(930,565);plant(565,555);
+  ctx.fillStyle="#64748b";ctx.font="bold 13px Arial";ctx.fillText("ENTRANCE",815,600);
+
+  Object.entries(players).forEach(([uid,p])=>{if(uid!==currentUser?.uid)drawPlayer(p,false)});
+  if(myPlayer)drawPlayer(myPlayer,true);
 }
+function renderPlayers(){
+  const entries=Object.entries(players).filter(([,p])=>p&&p.name);
+  $("mapPlayerCount").textContent="参加者 "+entries.length+"人";
+  $("playerCountLabel").textContent=entries.length+"人";
+  const list=$("playersList");list.replaceChildren();
 
-function drawPlayer(player, isMe) {
-  const x = Number(player.x) || 100;
-  const y = Number(player.y) || 100;
-  const color = player.color || "#39a783";
-
-  // 影
-  ctx.beginPath();
-  ctx.fillStyle = "rgba(30,45,65,0.12)";
-  ctx.ellipse(x, y + 13, 17, 6, 0, 0, Math.PI * 2);
-  ctx.fill();
-
-  // アバター
-  ctx.beginPath();
-  ctx.fillStyle = color;
-  ctx.arc(x, y, 15, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.lineWidth = isMe ? 4 : 2;
-  ctx.strokeStyle = isMe ? "#ffffff" : "rgba(255,255,255,0.85)";
-  ctx.stroke();
-
-  // 頭文字
-  const name = safeText(player.name || "U");
-  ctx.fillStyle = "#ffffff";
-  ctx.font = "bold 12px Arial, sans-serif";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText(name.slice(0, 1).toUpperCase(), x, y + 1);
-
-  // 名前ラベル
-  ctx.textBaseline = "alphabetic";
-  ctx.font = "bold 13px Arial, sans-serif";
-  const label = name.length > 12 ? name.slice(0, 12) + "…" : name;
-  const labelW = ctx.measureText(label).width + 16;
-  roundedRect(x - labelW / 2, y + 21, labelW, 23, 7, "rgba(255,255,255,0.96)", "#dce3ec");
-  ctx.fillStyle = "#27364a";
-  ctx.fillText(label, x, y + 37);
-  ctx.textAlign = "start";
-}
-
-function renderPlayers() {
-  const entries = Object.entries(players).filter(([, p]) => p && p.name);
-  document.getElementById("mapPlayerCount").textContent = "参加者 " + entries.length + "人";
-  document.getElementById("playerCountLabel").textContent = entries.length + "人";
-
-  const list = document.getElementById("playersList");
-  list.replaceChildren();
-
-  if (entries.length === 0) {
-    const empty = document.createElement("div");
-    empty.className = "empty";
-    empty.textContent = "現在、参加者はいません。";
-    list.appendChild(empty);
-  } else {
-    entries.sort((a, b) => {
-      if (a[0] === currentUser?.uid) return -1;
-      if (b[0] === currentUser?.uid) return 1;
-      return safeText(a[1].name).localeCompare(safeText(b[1].name), "ja");
+  if(!entries.length){
+    const empty=document.createElement("div");empty.className="empty";empty.textContent="現在、参加者はいません。";list.appendChild(empty);
+  }else{
+    entries.sort((a,b)=>a[0]===currentUser?.uid?-1:b[0]===currentUser?.uid?1:String(a[1].name).localeCompare(String(b[1].name),"ja"));
+    entries.forEach(([uid,p])=>{
+      const row=document.createElement("div");row.className="player-row";
+      const avatar=document.createElement("div");avatar.className="avatar";avatar.style.background=p.color||"#39a783";avatar.textContent=String(p.name).slice(0,1);
+      const info=document.createElement("div");
+      const name=document.createElement("div");name.className="player-name";name.textContent=p.name+(uid===currentUser?.uid?"（あなた）":"");
+      const zone=document.createElement("div");zone.className="player-zone";zone.textContent=zoneById(p.zone).name;
+      info.append(name,zone);row.append(avatar,info);list.appendChild(row);
     });
-
-    for (const [uid, p] of entries) {
-      const row = document.createElement("div");
-      row.className = "player-row";
-
-      const avatar = document.createElement("div");
-      avatar.className = "player-avatar";
-      avatar.style.background = p.color || "#39a783";
-      avatar.textContent = safeText(p.name).slice(0, 1).toUpperCase();
-
-      const info = document.createElement("div");
-      const name = document.createElement("div");
-      name.className = "player-name";
-      name.textContent = safeText(p.name) + (uid === currentUser?.uid ? "（あなた）" : "");
-
-      const zone = document.createElement("div");
-      zone.className = "player-zone";
-      zone.textContent = getZoneById(p.zone).name;
-
-      info.append(name, zone);
-      row.append(avatar, info);
-      list.appendChild(row);
-    }
   }
-
   drawMap();
 }
-
-function publishPosition(force = false) {
-  if (!joined || !playerRef || !myPlayer) return;
-
-  const now = Date.now();
-  if (!force && now - lastWriteAt < 100) {
-    pendingPosition = { ...myPlayer };
-    if (!moveTimer) {
-      moveTimer = setTimeout(() => {
-        moveTimer = null;
-        if (pendingPosition) {
-          const p = pendingPosition;
-          pendingPosition = null;
-          writePosition(p);
-        }
-      }, 110);
-    }
+function updateZoneUI(){
+  $("myZone").textContent=zoneById(myPlayer.zone).name;
+  document.querySelectorAll("[data-zone]").forEach(b=>b.classList.toggle("active",b.dataset.zone===myPlayer?.zone));
+}
+function writePosition(force=false){
+  if(!joined||!playerRef||!myPlayer)return;
+  const now=Date.now();
+  if(!force&&now-lastWrite<120){
+    pendingWrite=true;
+    clearTimeout(moveTimer);
+    moveTimer=setTimeout(()=>{pendingWrite=false;writePosition(true)},130);
     return;
   }
-  writePosition({ ...myPlayer });
-}
-
-function writePosition(p) {
-  if (!joined || !playerRef) return;
-  lastWriteAt = Date.now();
-  const zone = zoneAt(p.x, p.y);
-  myPlayer.zone = zone.id;
-
+  lastWrite=now;
+  const z=zoneAt(myPlayer.x,myPlayer.y);
+  myPlayer.zone=z.id;
   playerRef.update({
-    name: myPlayer.name,
-    x: Math.round(p.x),
-    y: Math.round(p.y),
-    zone: myPlayer.zone,
-    color: myPlayer.color,
-    updatedAt: firebase.database.ServerValue.TIMESTAMP
-  }).catch(err => {
-    console.error(err);
-    setConnection(false, "同期エラー");
-  });
+    name:myPlayer.name,x:Math.round(myPlayer.x),y:Math.round(myPlayer.y),
+    zone:myPlayer.zone,color:myPlayer.color,
+    updatedAt:firebase.database.ServerValue.TIMESTAMP
+  }).catch(err=>showFirebaseError(err,"位置の同期"));
 }
-
-function moveBy(dx, dy) {
-  if (!joined || !myPlayer) return;
-  const next = clampPosition(myPlayer.x + dx, myPlayer.y + dy);
-  myPlayer.x = next.x;
-  myPlayer.y = next.y;
-  myPlayer.zone = zoneAt(next.x, next.y).id;
-  document.getElementById("myZone").textContent = getZoneById(myPlayer.zone).name;
-  updateZoneButtons();
-  drawMap();
-  publishPosition();
+function move(dx,dy){
+  if(!joined||!myPlayer)return;
+  const p=clamp(myPlayer.x+dx,myPlayer.y+dy);
+  myPlayer.x=p.x;myPlayer.y=p.y;myPlayer.zone=zoneAt(p.x,p.y).id;
+  updateZoneUI();drawMap();writePosition();
 }
-
-function moveToZone(zoneId) {
-  if (!joined || !myPlayer) return;
-  const positions = {
-    quiet: { x: 250, y: 245 },
-    group: { x: 800, y: 285 },
-    break: { x: 650, y: 520 }
-  };
-  const p = positions[zoneId] || positions.quiet;
-  myPlayer.x = p.x;
-  myPlayer.y = p.y;
-  myPlayer.zone = zoneId;
-  document.getElementById("myZone").textContent = getZoneById(zoneId).name;
-  updateZoneButtons();
-  drawMap();
-  publishPosition(true);
+function moveToZone(id){
+  if(!joined||!myPlayer)return;
+  const pos={quiet:{x:250,y:245},group:{x:800,y:285},break:{x:650,y:520}}[id];
+  if(!pos)return;
+  myPlayer.x=pos.x;myPlayer.y=pos.y;myPlayer.zone=id;
+  updateZoneUI();drawMap();writePosition(true);
 }
+function showFirebaseError(err,operation="Firebase"){
+  console.error(operation,err);
+  const code=err?.code||"";
+  const raw=err?.message||String(err);
+  let explanation=raw;
 
-function updateZoneButtons() {
-  document.querySelectorAll("[data-zone]").forEach(button => {
-    button.classList.toggle("active", button.dataset.zone === myPlayer?.zone);
-  });
-}
-
-function showApp(name) {
-  loginScreen.style.display = "none";
-  appScreen.style.display = "block";
-  leaveButton.style.display = "inline-block";
-  document.getElementById("myName").textContent = name;
-}
-
-function showLogin() {
-  loginScreen.style.display = "block";
-  appScreen.style.display = "none";
-  leaveButton.style.display = "none";
-}
-
-async function joinRoom() {
-  const name = nameInput.value.trim();
-  if (!name) {
-    setMessage("表示名を入力してください。", "error");
-    nameInput.focus();
-    return;
+  if(code==="auth/api-key-not-valid"||raw.includes("api-key-not-valid")){
+    explanation="APIキーが無効です。Firebase Consoleのプロジェクト設定から、reservelink-efb43のウェブアプリ設定を再確認してください。";
+  }else if(code==="auth/operation-not-allowed"){
+    explanation="匿名ログインが無効です。Firebase Authenticationのログイン方法で「匿名」を有効にしてください。";
+  }else if(code==="PERMISSION_DENIED"||raw.includes("PERMISSION_DENIED")||raw.includes("permission_denied")){
+    explanation="Realtime Databaseのアクセスルールで拒否されました。下記のルールを設定してください。";
+  }else if(code==="auth/network-request-failed"){
+    explanation="ネットワーク接続に失敗しました。インターネット接続や通信制限を確認してください。";
+  }else if(code==="auth/unauthorized-domain"){
+    explanation="このページのドメインが未許可です。Firebase Authenticationの承認済みドメインを確認してください。";
   }
-  if (name.length > 16) {
-    setMessage("表示名は16文字以内にしてください。", "error");
-    return;
-  }
+  setMessage(operation+"に失敗しました。\n"+explanation+"\nエラーコード："+(code||"不明"),"error");
+  setConnection(false,"エラー");
+}
+async function joinRoom(){
+  const name=$("displayName").value.trim();
+  if(!name){setMessage("表示名を入力してください。","error");$("displayName").focus();return}
+  if(name.length>16){setMessage("表示名は16文字以内にしてください。","error");return}
+  if(!auth||!db){setMessage("Firebase SDKを初期化できません。ページを再読み込みし、通信環境を確認してください。","error");return}
 
-  joinButton.disabled = true;
-  setMessage("入室処理を実行しています。");
+  $("joinButton").disabled=true;
+  setMessage("Firebase認証を確認しています。");
+  try{
+    if(!auth.currentUser)await auth.signInAnonymously();
+    currentUser=auth.currentUser;
+    if(!currentUser)throw new Error("認証ユーザーを取得できませんでした。");
 
-  try {
-    if (!auth.currentUser) {
-      await auth.signInAnonymously();
-    }
-    currentUser = auth.currentUser;
-    if (!currentUser) throw new Error("ユーザー認証を確認できませんでした。");
+    playerRef=db.ref(ROOM_PATH+"/"+currentUser.uid);
+    playersRef=db.ref(ROOM_PATH);
 
-    playerRef = db.ref(ROOM_PATH + "/" + currentUser.uid);
-    playersRef = db.ref(ROOM_PATH);
-
-    const initialX = 120 + Math.random() * 330;
-    const initialY = 130 + Math.random() * 200;
-    const existing = await playerRef.once("value");
-    const old = existing.val();
-
-    myColor = old?.color || PLAYER_COLORS[Math.floor(Math.random() * PLAYER_COLORS.length)];
-    myPlayer = {
-      name,
-      x: old && Number.isFinite(old.x) ? old.x : initialX,
-      y: old && Number.isFinite(old.y) ? old.y : initialY,
-      zone: old?.zone || "quiet",
-      color: myColor
+    setMessage("参加者データを確認しています。");
+    const snap=await playerRef.once("value");
+    const old=snap.val();
+    myPlayer={
+      name:name,
+      x:old&&Number.isFinite(old.x)?old.x:120+Math.random()*330,
+      y:old&&Number.isFinite(old.y)?old.y:130+Math.random()*200,
+      zone:old?.zone||"quiet",
+      color:old?.color||COLORS[colorIndex++%COLORS.length]
     };
-    const safe = clampPosition(myPlayer.x, myPlayer.y);
-    myPlayer.x = safe.x;
-    myPlayer.y = safe.y;
-    myPlayer.zone = zoneAt(myPlayer.x, myPlayer.y).id;
+    const p=clamp(myPlayer.x,myPlayer.y);
+    myPlayer.x=p.x;myPlayer.y=p.y;myPlayer.zone=zoneAt(p.x,p.y).id;
 
-    // ブラウザ切断時に、参加者データを自動削除
     await playerRef.onDisconnect().remove();
-
     await playerRef.set({
       ...myPlayer,
-      joinedAt: firebase.database.ServerValue.TIMESTAMP,
-      updatedAt: firebase.database.ServerValue.TIMESTAMP
+      joinedAt:firebase.database.ServerValue.TIMESTAMP,
+      updatedAt:firebase.database.ServerValue.TIMESTAMP
     });
 
-    joined = true;
-    showApp(name);
-    setConnection(true, "接続中");
-    document.getElementById("myZone").textContent = getZoneById(myPlayer.zone).name;
-    updateZoneButtons();
-    setMessage("入室しました。", "success");
+    joined=true;
+    $("loginScreen").style.display="none";
+    $("app").style.display="block";
+    $("leaveButton").hidden=false;
+    $("myName").textContent=name;
+    updateZoneUI();
+    setConnection(true,"接続中");
+    setMessage("入室しました。","success");
 
-    playersRef.on("value", snapshot => {
-      players = snapshot.val() || {};
-      if (currentUser && players[currentUser.uid]) {
-        const latest = players[currentUser.uid];
-        if (latest.name !== myPlayer.name) myPlayer.name = latest.name;
-      }
+    playersRef.on("value",s=>{
+      players=s.val()||{};
       renderPlayers();
-    }, error => {
-      console.error(error);
-      setConnection(false, "読み込みエラー");
-    });
+    },err=>showFirebaseError(err,"参加者一覧の読み込み"));
 
-    db.ref(".info/connected").on("value", snapshot => {
-      const online = snapshot.val() === true;
-      setConnection(online, online ? "接続中" : "再接続中");
-      if (online && playerRef && joined) {
-        playerRef.onDisconnect().remove().catch(console.error);
-      }
+    db.ref(".info/connected").on("value",s=>{
+      const online=s.val()===true;
+      setConnection(online,online?"接続中":"再接続中");
+      if(online&&joined&&playerRef)playerRef.onDisconnect().remove().catch(console.error);
     });
-
-  } catch (error) {
-    console.error(error);
-    const code = error.code || "";
-    let detail = error.message || "不明なエラー";
-    if (code === "auth/operation-not-allowed") {
-      detail = "匿名ログインが無効です。Firebase Console の Authentication で匿名ログインを有効にしてください。";
-    } else if (code === "PERMISSION_DENIED" || code === "permission_denied") {
-      detail = "データベースへのアクセスが拒否されました。Realtime Database のルールを確認してください。";
-    } else if (code === "NETWORK_ERROR") {
-      detail = "ネットワーク接続を確認してください。";
-    }
-    setMessage("入室できませんでした：" + detail, "error");
-    setConnection(false, "未接続");
-  } finally {
-    joinButton.disabled = false;
+  }catch(err){
+    showFirebaseError(err,"入室");
+  }finally{
+    $("joinButton").disabled=false;
   }
 }
-
-async function leaveRoom() {
-  joined = false;
-
-  if (playersRef) {
-    playersRef.off();
-    playersRef = null;
-  }
-
-  db.ref(".info/connected").off();
-
-  if (moveTimer) {
-    clearTimeout(moveTimer);
-    moveTimer = null;
-  }
-
-  try {
-    if (playerRef) {
-      await playerRef.onDisconnect().cancel();
-      await playerRef.remove();
-    }
-  } catch (error) {
-    console.warn("退出時のデータ削除:", error);
-  }
-
-  playerRef = null;
-  myPlayer = null;
-  players = {};
-  renderPlayers();
-  showLogin();
-  setConnection(false, "未接続");
+async function leaveRoom(){
+  joined=false;
+  if(playersRef){playersRef.off();playersRef=null}
+  if(db)db.ref(".info/connected").off();
+  clearTimeout(moveTimer);
+  try{
+    if(playerRef){await playerRef.onDisconnect().cancel();await playerRef.remove()}
+  }catch(err){console.warn("退出時の処理",err)}
+  playerRef=null;myPlayer=null;players={};
+  $("app").style.display="none";
+  $("loginScreen").style.display="block";
+  $("leaveButton").hidden=true;
+  setConnection(false,"未接続");
   setMessage("退出しました。再び入室できます。");
+  renderPlayers();
 }
-
-joinButton.addEventListener("click", joinRoom);
-nameInput.addEventListener("keydown", event => {
-  if (event.key === "Enter") joinRoom();
-});
-leaveButton.addEventListener("click", leaveRoom);
-
-canvas.addEventListener("pointerdown", event => {
-  if (!joined || !myPlayer) return;
-  const rect = canvas.getBoundingClientRect();
-  const x = (event.clientX - rect.left) / rect.width * MAP_W;
-  const y = (event.clientY - rect.top) / rect.height * MAP_H;
-  const p = clampPosition(x, y);
-  myPlayer.x = p.x;
-  myPlayer.y = p.y;
-  myPlayer.zone = zoneAt(p.x, p.y).id;
-  document.getElementById("myZone").textContent = getZoneById(myPlayer.zone).name;
-  updateZoneButtons();
-  drawMap();
-  publishPosition(true);
-});
-
-document.querySelectorAll("[data-move]").forEach(button => {
-  button.addEventListener("click", () => {
-    const step = 28;
-    const directions = {
-      up: [0, -step],
-      down: [0, step],
-      left: [-step, 0],
-      right: [step, 0]
-    };
-    const [dx, dy] = directions[button.dataset.move];
-    moveBy(dx, dy);
+$("joinButton").addEventListener("click",joinRoom);
+$("displayName").addEventListener("keydown",e=>{if(e.key==="Enter")joinRoom()});
+$("leaveButton").addEventListener("click",leaveRoom);
+document.querySelectorAll("[data-move]").forEach(b=>{
+  b.addEventListener("click",()=>{
+    const d={up:[0,-25],down:[0,25],left:[-25,0],right:[25,0]}[b.dataset.move];
+    move(d[0],d[1]);
   });
 });
-
-document.querySelectorAll("[data-zone]").forEach(button => {
-  button.addEventListener("click", () => moveToZone(button.dataset.zone));
-});
-
-document.addEventListener("keydown", event => {
-  if (!joined) return;
-  if (["INPUT", "TEXTAREA"].includes(document.activeElement?.tagName)) return;
-
-  const keys = {
-    ArrowUp: [0, -20], w: [0, -20], W: [0, -20],
-    ArrowDown: [0, 20], s: [0, 20], S: [0, 20],
-    ArrowLeft: [-20, 0], a: [-20, 0], A: [-20, 0],
-    ArrowRight: [20, 0], d: [20, 0], D: [20, 0]
+document.querySelectorAll("[data-zone]").forEach(b=>b.addEventListener("click",()=>moveToZone(b.dataset.zone)));
+document.addEventListener("keydown",e=>{
+  if(!joined||["INPUT","TEXTAREA"].includes(document.activeElement?.tagName))return;
+  const keys={
+    ArrowUp:[0,-20],w:[0,-20],W:[0,-20],
+    ArrowDown:[0,20],s:[0,20],S:[0,20],
+    ArrowLeft:[-20,0],a:[-20,0],A:[-20,0],
+    ArrowRight:[20,0],d:[20,0],D:[20,0]
   };
-  if (keys[event.key]) {
-    event.preventDefault();
-    moveBy(...keys[event.key]);
-  }
+  if(keys[e.key]){e.preventDefault();move(...keys[e.key])}
+});
+canvas.addEventListener("pointerdown",e=>{
+  if(!joined||!myPlayer)return;
+  const rect=canvas.getBoundingClientRect();
+  const p=clamp((e.clientX-rect.left)/rect.width*MAP_W,(e.clientY-rect.top)/rect.height*MAP_H);
+  myPlayer.x=p.x;myPlayer.y=p.y;myPlayer.zone=zoneAt(p.x,p.y).id;
+  updateZoneUI();drawMap();writePosition(true);
 });
 
-window.addEventListener("beforeunload", () => {
-  // onDisconnect() は Firebase サーバー側に登録されています。
-});
-
+/* 起動時にFirebaseの初期化エラーを表示する */
+try{
+  if(!firebaseConfig.apiKey||!firebaseConfig.projectId)throw new Error("Firebase設定が不足しています。");
+  if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);
+  auth=firebase.auth();
+  db=firebase.database();
+  setMessage("Firebase設定を読み込みました。入室できます。");
+}catch(err){
+  console.error(err);
+  setMessage("Firebaseの初期化に失敗しました。\n"+(err.message||String(err)),"error");
+}
 drawMap();
 </script>
 </body>
